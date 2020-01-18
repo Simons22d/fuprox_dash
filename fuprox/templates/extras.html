@@ -44,5 +44,60 @@
   </section>
 {% endblock status %}
 {% block content %}
-This is extras.
+<div class="col-lg-12">
+<!--    desktop application link -->
+    <div class="row">
+        <h5 class="text-muted "><u>Download Applications.</u></h5>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+<!--                desktop application-->
+            <div class="icon">
+            <img src="{{url_for('static',filename='images/personal-computer.svg')}}" alt="Desktop app" height="100px">
+            </div>
+            <h5 class="text-muted text-small">Desktop Application.</h5>
+
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At impedit incidunt iste nobis, quidem temporibus ullam veritatis voluptatem? Dolorem, ipsam?</div>
+            <div>
+            <button class="btn-sm btn-primary mt-3">Dowload Desktop application</button></div>
+            </div>
+            <div class="col-lg-4">
+<!--                mobile application-->
+                <div class="icon mb-4 mt-2">
+                  <img src="{{url_for('static',filename='images/android.svg')}}" alt="Desktop app" height="60px">    
+                </div>
+                <h5 class="text-muted">Mobile Application.</h5>
+
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At impedit incidunt iste nobis, quidem temporibus ullam veritatis voluptatem? Dolorem, ipsam?</div>
+                <div>
+                <button class="btn-sm btn-primary mt-3 ">Dowload Mobile Application</button></div>
+            </div>
+        </div>
+    </div>
+
+<!--    more info about a div-->
+    <div class="row mt-5 mb-5">
+        <h5 class="text-muted mt-5 mb-3"><u>Manage Users.</u></h5>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+<!--                desktop application-->
+            <div class="icon mb-3 mt-3">
+                <img src="{{url_for('static',filename='images/account.svg')}}" alt="Desktop app" height="60px"> 
+            </div>
+            <h5 class="text-muted text-small">Add users.</h5>
+
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At impedit incidunt iste nobis, quidem temporibus ullam veritatis voluptatem? Dolorem, ipsam?</div>
+            <div>
+            <button class="btn-sm btn-primary col-lg-3 mt-3">Add Users</button></div>
+            </div>
+<!--            <div class="col-lg-6">-->
+<!--&lt;!&ndash;                mobile application&ndash;&gt;-->
+<!--                <h5 class="text-muted">Mobile Application.</h5>-->
+
+<!--                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At impedit incidunt iste nobis, quidem temporibus ullam veritatis voluptatem? Dolorem, ipsam?</div>-->
+<!--                <div>-->
+<!--                <button class="btn-sm btn-primary mt-3 ">Dowload Mobile Application</button></div>-->
+<!--            </div>-->
+        </div>
+    </div>
+</div>
 {% endblock content  %}

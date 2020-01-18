@@ -38,7 +38,7 @@ class UserSchema(ma.Schema):
 class Company(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(length=50))
-    service = db.Column(db.String(length=50))
+    service = db.Column(db.String(length=250))
 
     def __init__(self,name,service):
         self.name = name
@@ -50,16 +50,14 @@ class Company(db.Model):
 
 class CompanySchema(ma.Schema):
     class Meta:
-        fields = ("id","name","service")
+        fields = ("id", "name", "service")
 
 
 # creating a branch class
-
-
 class Branch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(length=100))
-    company = db.Column(db.String(length=254), primary_key=False)
+    company = db.Column(db.String(length=11))
     longitude = db.Column(db.String(length=50))
     latitude = db.Column(db.String(length=50))
     opens = db.Column(db.String(length=50))
@@ -103,7 +101,5 @@ class Service(db.Model):
 
 class ServiceSchema(ma.Schema):
     class Meta:
-        fields = ("id","name","service")
-
-
+        fields = ("id", "name", "service")
 

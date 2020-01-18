@@ -140,6 +140,7 @@
                 {{ form.latitude.label(class='form-control-label') }}
                 {% if form.latitude.errors %}
                 {{ form.latitude(class="form-control form-control-sm is-invalid",id="lat")}}
+
                 <div class="invalid-feedback">
                     {% for error in form.latitude.errors %}
                     <span>{{ error }}</span>
@@ -177,8 +178,13 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                    {{ form.service(class="form-control form-control-sm ")}}
+                    {{ form.service(class="form-control form-control-sm",list="serviceName", placeholder="Enter the service Type")}}
                 {% endif %}
+                <datalist id="serviceName">
+                    {% for d in services %}
+                        <option value="{{d.id}}">{{ d.name }}</option>
+                    {% endfor %}
+                </datalist>
                 <small class="form-text text-muted"></small>
               </div>
               <div class="col-lg-6">
@@ -191,9 +197,15 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                    {{ form.company(class="form-control form-control-sm ")}}
+                    {{ form.company(class="form-control form-control-sm",list="companyName", placeholder="Enter the Company Name")}}
                 {% endif %}
+                  <datalist id="companyName">
+                    {% for d in companies %}
+                        <option value="{{d.id}}">{{ d.name }}</option>
+                    {% endfor %}
+                </datalist>
                 <small class="form-text text-muted"></small>
+
             </div>
             </div>
 

@@ -123,15 +123,20 @@
               <div class="col-lg-12">
                 {{ form.service.label(class='form-control-label') }}
                 {% if form.service.errors %}
-                {{ form.service(class="form-control form-control-sm is-invalid",id="lat")}}
+                {{ form.service(class="form-control form-control-sm is-invalid",id="service",list="serviceName", placeholder="Enter the service Type")}}
                 <div class="invalid-feedback">
                     {% for error in form.service.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                    {{ form.service(class="form-control form-control-sm ",id="lat")}}
+                    {{ form.service(class="form-control form-control-sm ",id="service",list="serviceName", placeholder="Enter the service Type")}}
                 {% endif %}
+                <datalist id="serviceName">
+                    {% for d in companies %}
+                        <option value="{{d.id}}">{{ d.name }}</option>
+                    {% endfor %}
+                </datalist>
                 <small class="form-text text-muted"></small>
               </div>
             </div>

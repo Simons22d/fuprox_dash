@@ -8,7 +8,19 @@ import json
 import jsonify
 
 user_schema = UserSchema()
+
+# working with branch schema
+branch_schema = BranchSchema()
+branches_schema = BranchSchema(many=True)
+
+
+company_schema = CompanySchema()
+companies_schema = CompanySchema(many=True)
+
+
+
 # rendering many route to the same template
+
 @app.route("/")
 @app.route("/dashboard")
 def home():
@@ -18,15 +30,15 @@ def home():
 
 @app.route("/payments")
 def payments():
+    # work on the payments templates
     return render_template("payment.html")
-
-
-
 
 
 @app.route("/branches")
 @app.route("/branches/add",methods=["POST","GET"])
-def branches():
+def branches():# get data from the database
+    company_data = Company.query.all()
+    service_data = Service.query.all()
     # init the form
     branch = BranchForm()
     if branch.validate_on_submit():
@@ -42,15 +54,21 @@ def branches():
         branch.closes.data = ""
         branch.service.data = ""
         branch.description.data = ""
-
         flash(f"Branch Successfully Added", "success")
-    return render_template("add_branch.html",form=branch)
 
-#view_branch
+    return render_template("add_branch.html",form=branch,companies = company_data,services=service_data)
+
+# view_branch
+
+
 @app.route("/branches/view")
 def view_branch():
+    # get data from the database
+    branches_data = Branch.query.all()
     company = ServiceForm()
-    return render_template("view_branch.html",form=company)
+    return render_template("view_branch.html",form=company,data = branches_data)
+
+
 
 @app.route("/branches/category")
 @app.route("/branches/category/add",methods=["POST","GET"])
@@ -63,36 +81,43 @@ def add_category():
         company.name.data = ""
         company.service.data = ""
         flash(f"Company Successfully Added", "success")
-    return render_template("add_category.html",form=company)
+    return render_template("add_category.html", form=company)
 
 
-@app.route("/branches/company",methods=["GET","POST"])
-@app.route("/branches/company/add",methods=["POST","GET"])
+@app.route("/branches/company", methods=["GET", "POST"])
+@app.route("/branches/company/add", methods=["POST", "GET"])
 def add_company():
+    service_data = Service.query.all()
     # init the form
     company = OrganizationForm()
     if company.validate_on_submit():
-        data = Company(company.name.data,company.service.data)
+        data = Company(company.name.data, company.service.data)
+        print(company.name.data, company.service.data)
         db.session.add(data)
         db.session.commit()
         company.name.data = ""
         company.service.data = ""
         flash(f"Company Successfully Added", "success")
-    return render_template("add_company.html",form=company)
+    return render_template("add_company.html", form=company ,companies = service_data)
 
 
 @app.route("/branches/company/view")
 def view_company():
+    # get the branch data
+    company_data = Company.query.all()
+
     # init the form
     branch = BranchForm()
-    return render_template("view_company.html", form=branch)
+    return render_template("view_company.html", form=branch, data =company_data)
 
 
 @app.route("/branches/category/view")
 def view_category():
+    # category data
+    service_data = Service.query.all()
     # init the form
     branch = BranchForm()
-    return render_template("view_category.html", form=branch)
+    return render_template("view_category.html", form=branch, data=service_data)
 
 
 @app.route("/help")
@@ -147,3 +172,33 @@ def register():
         flash(f"Account Created successfully", "success")
         return redirect(url_for('login'))
     return render_template("register.html", form=register)
+
+
+# new routes
+@app.route("/extras/desktop")
+def desktop_app():
+    pass
+
+
+@app.route("/extras/mobile")
+def mobile_app():
+    pass
+
+
+''' working with users'''
+
+
+@app.route("/extras/users/add")
+def add_users():
+    pass
+
+
+@app.route("/extras/users/view")
+def view_users():
+    pass
+
+
+@app.route("/extras/users/manage")
+def manage_users():
+    pass
+

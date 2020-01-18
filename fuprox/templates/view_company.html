@@ -90,8 +90,60 @@
 <!--        <div class="row container mb-3"><div class="text-muted">Companies</div>-->
         <br>
       </div>
-
+      </div>
+            <div class="row">
+        <div class="col-lg-7">
+          <table class="table table-sm table-hover table-bordered" style="font-size:12px;">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Company</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        {% for item in data %}
+          <tr>
+            <th scope="row">{{item.id}}</th>
+            <td>{{item.name}}</td>
+            <td>{{item.service}}</td>
+          </tr>
+        {% endfor %}
+          
+        </tbody>
+      </table>
+        </div>
+        <div class="col-lg-4 offset-lg-1">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur, a!
+        </div>
       </div>
     </div>
       <!-- end container -->
 {% endblock %}
+
+
+<!-- 
+SEARCH CODE
+<input required  class='form-control form-control-sm' list="staffNumberList" name='staff_number' id='staffNumber' aria-placeholder="Enter User Staff number Eg. 20" oninput="getStaffNumber(this)">
+<datalist id="staffNumberList">
+  <option value="denis"></option>
+</datalist>
+
+FUNCTION
+const getStaffNumber = (me) =>{
+    fetch(`http://${address}:3700/users/staffnumber/${me.value}`,{
+        headers: { "Authorization": `Bearer ${token}` }
+    })
+    .then( data => data.json() )
+    .then( data => {
+        if(data){
+            $("#staffNumberList").html("");
+            $("#staffNumberList").append(`<option value="${data.staff_number}">${data.name}</option>`)
+        }else{
+            $("#staffNumberList").html("");
+            $("#staffNumberList").append(`<option style='color:#f00;' value="${me.value}">User Does Not Exist.</option>`)
+        }
+    })
+}
+ -->

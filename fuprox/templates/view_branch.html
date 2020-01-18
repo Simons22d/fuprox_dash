@@ -90,8 +90,57 @@
 <!--        <div class="row container mb-3"><div class="text-muted">Companies</div>-->
         <br>
       </div>
-
       </div>
+
+    <div>
+      <!-- data -->
+      <!-- 
+  id          | int(11)      | NO   | PRI | NULL    | auto_increment |
+| name        | varchar(100) | YES  |     | NULL    |                |
+| company     | varchar(11)  | YES  |     | NULL    |                |
+| longitude   | varchar(50)  | YES  |     | NULL    |                |
+| latitude    | varchar(50)  | YES  |     | NULL    |                |
+| opens       | varchar(50)  | YES  |     | NULL    |                |
+| closes      | varchar(50)  | YES  |     | NULL    |                |
+| service     | varchar(50)  | YES  |     | NULL    |                |
+| description | varchar(50)  | YES  |     | NULL    |                |
++------------ -->
+      <!-- end data -->
+      <!-- table template start -->
+      <table class="table table-sm table-hover" style="font-size:12px;">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Company</th>
+            <th scope="col">Longitude</th>
+            <th scope="col">Latitude</th>
+            <th scope="col">Opens</th>
+            <th scope="col">Closes</th>
+            <th scope="col">Service</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        {% for item in data %}
+          <tr>
+            <th scope="row">{{item.id}}</th>
+            <td>{{item.name}}</td>
+            <td>{{item.company}}</td>
+            <td>{{item.longitude}}</td>
+            <td>{{item.latitude}}</td>
+            <td>{{item.opens}}</td>
+            <td>{{item.closes}}</td>
+            <td>{{item.service}}</td>
+            <td class="btn btn-sm btn-link">more info</td>
+          </tr>
+        {% endfor %}
+          
+        </tbody>
+      </table>
+      <!-- table template end -->
+    </div>
     </div>
       <!-- end container -->
 {% endblock %}

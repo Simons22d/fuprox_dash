@@ -90,7 +90,33 @@
 <!--        <div class="row container mb-3"><div class="text-muted">Companies</div>-->
         <br>
       </div>
-
+      </div>
+      <div class="row">
+        <div class="col-lg-7">
+          <table class="table table-sm table-hover table-bordered" style="font-size:12px;">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Service</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        {% for item in data %}
+          <tr>
+            <th scope="row">{{item.id}}</th>
+            <td>{{item.name}}</td>
+            <td>{{item.service}}</td>
+          </tr>
+        {% endfor %}
+          
+        </tbody>
+      </table>
+        </div>
+        <div class="col-lg-4 offset-lg-1">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur, a!
+        </div>
       </div>
     </div>
       <!-- end container -->
