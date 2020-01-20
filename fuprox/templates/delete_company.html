@@ -32,7 +32,7 @@
       <div class="row">
         <div class="col-md-12 col-lg-8">
           <div class="title-single-box">
-            <h5 style="font-size:15px;">Dashboard / <span style="color:grey;">Branch</span> </h5>
+            <h5 style="font-size:15px;">Dashboard / <span style="color:grey;">Company</span> </h5>
             <span class="color-text-a"></span>
           </div>
         </div>
@@ -47,7 +47,7 @@
 }
 </style>
 <script>
-  $("#choice").html("Branch")
+  $("#choice").html("Company")
 </script>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     <a class="dropdown-item" href="{{ url_for('branches') }}">Branch</a>
@@ -64,10 +64,10 @@
         <div class="col-lg-12">
         <ul class="nav nav-tabs " style="font-size:12px; pading-top:0px;">
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('branches') }}" id="add branch">Add Branch</a>
+                <a class="nav-link " href="{{ url_for('add_company') }}" id="add branch">Add Company</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('view_company' )}}" id="branches">Branches</a>
+                <a class="nav-link active" href="{{ url_for('view_company' )}}" id="branches">Companies</a>
               </li>
         </ul>
         </div>
@@ -91,57 +91,33 @@
         <br>
       </div>
       </div>
-
-    <div>
-      <!-- data -->
-      <!-- 
-  id          | int(11)      | NO   | PRI | NULL    | auto_increment |
-| name        | varchar(100) | YES  |     | NULL    |                |
-| company     | varchar(11)  | YES  |     | NULL    |                |
-| longitude   | varchar(50)  | YES  |     | NULL    |                |
-| latitude    | varchar(50)  | YES  |     | NULL    |                |
-| opens       | varchar(50)  | YES  |     | NULL    |                |
-| closes      | varchar(50)  | YES  |     | NULL    |                |
-| service     | varchar(50)  | YES  |     | NULL    |                |
-| description | varchar(50)  | YES  |     | NULL    |                |
-+------------ -->
-      <!-- end data -->
-      <!-- table template start -->
-      <table class="table table-sm table-hover" style="font-size:12px;">
+            <div class="row">
+        <div class="col-lg-7">
+          <table class="table table-sm table-hover table-bordered" style="font-size:12px;">
         <thead>
           <tr>
             <th scope="col">id</th>
             <th scope="col">Name</th>
-            <th scope="col">Company</th>
-            <th scope="col">Longitude</th>
-            <th scope="col">Latitude</th>
-            <th scope="col">Opens</th>
-            <th scope="col">Closes</th>
             <th scope="col">Service</th>
-            <th scope="col" colspan="2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          
+
         {% for item in data %}
           <tr>
             <th scope="row">{{item.id}}</th>
             <td>{{item.name}}</td>
-            <td>{{item.company}}</td>
-            <td>{{item.longitude}}</td>
-            <td>{{item.latitude}}</td>
-            <td>{{item.opens}}</td>
-            <td>{{item.closes}}</td>
             <td>{{item.service}}</td>
-            <td><a href="{{ url_for('edit_branch',id=item.id)}}">edit</a></td>
-            <td><a href="{{ url_for('delete_branch',id=item.id)}}">delete</a></td>
           </tr>
         {% endfor %}
-          
+
         </tbody>
       </table>
-      <!-- table template end -->
-    </div>
+        </div>
+        <div class="col-lg-4 offset-lg-1">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur, a!
+        </div>
+      </div>
     </div>
       <!-- end container -->
 {% endblock %}

@@ -2020,3 +2020,9 @@ footer .credits {
   }
 }
 
+.report-container {
+    border: 5px solid #efefef;
+    padding: 20px;
+    padding-top:30px;
+    border-radius: 15px;
+}

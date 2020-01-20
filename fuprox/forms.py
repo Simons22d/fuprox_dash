@@ -30,8 +30,7 @@ class RegisterForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField("Email",validators = [DataRequired(),Email()])
-    password = PasswordField("Password",[ DataRequired() ])
-    # boolean field for keeping the session  on login
+    password = PasswordField("Password",validators = [DataRequired()])
     remmember = BooleanField("Remmember me")
     submit = SubmitField("Login")
 

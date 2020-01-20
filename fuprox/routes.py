@@ -3,32 +3,24 @@ from fuprox import app, db, ma,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, ResetRequest, ResetPassword, BranchForm,
                           OrganizationForm,ServiceForm)
-from fuprox.models import User,Company,Branch,UserSchema,CompanySchema,BranchSchema, Service, ServiceSchema
+
+from fuprox.models import User,Company,Branch, Service
 import json
 import jsonify
-
-user_schema = UserSchema()
-
-# working with branch schema
-branch_schema = BranchSchema()
-branches_schema = BranchSchema(many=True)
-
-
-company_schema = CompanySchema()
-companies_schema = CompanySchema(many=True)
-
 
 
 # rendering many route to the same template
 
 @app.route("/")
 @app.route("/dashboard")
+@login_required
 def home():
     # rendering template
     return render_template("branches.html")
 
 
 @app.route("/payments")
+@login_required
 def payments():
     # work on the payments templates
     return render_template("payment.html")
@@ -36,25 +28,32 @@ def payments():
 
 @app.route("/branches")
 @app.route("/branches/add",methods=["POST","GET"])
+@login_required
 def branches():# get data from the database
     company_data = Company.query.all()
     service_data = Service.query.all()
     # init the form
     branch = BranchForm()
     if branch.validate_on_submit():
-        data = Branch(branch.name.data,branch.company.data,branch.longitude.data,branch.latitude.data,branch.opens.data,
-                      branch.closes.data,branch.service.data,branch.description.data)
-        db.session.add(data)
-        db.session.commit()
-        branch.name.data = ""
-        branch.company.data = ""
-        branch.longitude.data = ""
-        branch.latitude.data = ""
-        branch.opens.data = ""
-        branch.closes.data = ""
-        branch.service.data = ""
-        branch.description.data = ""
-        flash(f"Branch Successfully Added", "success")
+        # get specific compan data
+        this_company_data = Company.query.get(branch.company.data)
+        if this_company_data :
+            data = Branch(branch.name.data, branch.company.data, branch.longitude.data, branch.latitude.data,
+                          branch.opens.data,
+                          branch.closes.data, branch.service.data, branch.description.data)
+            db.session.add(data)
+            db.session.commit()
+            branch.name.data = ""
+            branch.company.data = ""
+            branch.longitude.data = ""
+            branch.latitude.data = ""
+            branch.opens.data = ""
+            branch.closes.data = ""
+            branch.service.data = ""
+            branch.description.data = ""
+            flash(f"Branch Successfully Added", "success")
+        else:
+            flash("Company Does Not exist. Add copmany name first.","danger")
 
     return render_template("add_branch.html",form=branch,companies = company_data,services=service_data)
 
@@ -62,6 +61,7 @@ def branches():# get data from the database
 
 
 @app.route("/branches/view")
+@login_required
 def view_branch():
     # get data from the database
     branches_data = Branch.query.all()
@@ -72,46 +72,56 @@ def view_branch():
 
 @app.route("/branches/category")
 @app.route("/branches/category/add",methods=["POST","GET"])
+@login_required
 def add_category():
     company = ServiceForm()
+    # checkinf the mentioed  comapany exists
     if company.validate_on_submit():
         data = Service(company.name.data, company.service.data)
         db.session.add(data)
         db.session.commit()
         company.name.data = ""
         company.service.data = ""
-        flash(f"Company Successfully Added", "success")
+        flash(f"Service Successfully Added", "success")
     return render_template("add_category.html", form=company)
+
 
 
 @app.route("/branches/company", methods=["GET", "POST"])
 @app.route("/branches/company/add", methods=["POST", "GET"])
+@login_required
 def add_company():
     service_data = Service.query.all()
     # init the form
     company = OrganizationForm()
     if company.validate_on_submit():
-        data = Company(company.name.data, company.service.data)
-        print(company.name.data, company.service.data)
-        db.session.add(data)
-        db.session.commit()
-        company.name.data = ""
-        company.service.data = ""
-        flash(f"Company Successfully Added", "success")
+        # getting if the company type exists within the service types
+        service_type  = Service.query.get(int(company.service.data))
+        if service_type :
+            data = Company(company.name.data, company.service.data)
+            print(company.name.data, company.service.data)
+            db.session.add(data)
+            db.session.commit()
+            company.name.data = ""
+            company.service.data = ""
+            flash(f"Company Successfully Added", "success")
+        else :
+            flash("Service type Provided does not exist. Please add it first.","error")
     return render_template("add_company.html", form=company ,companies = service_data)
 
 
 @app.route("/branches/company/view")
+@login_required
 def view_company():
     # get the branch data
     company_data = Company.query.all()
-
     # init the form
     branch = BranchForm()
     return render_template("view_company.html", form=branch, data =company_data)
 
 
 @app.route("/branches/category/view")
+@login_required
 def view_category():
     # category data
     service_data = Service.query.all()
@@ -121,14 +131,15 @@ def view_category():
 
 
 @app.route("/help")
+@login_required
 def help():
     return render_template("help.html")
 
 
 @app.route("/extras")
+@login_required
 def extras():
     return render_template("extras.html")
-
 
 @app.route("/logout")
 def logout():
@@ -140,14 +151,18 @@ def logout():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("home"))
+
+    #loading the form
     login = LoginForm()
+
+    #checking the form data status
     if login.validate_on_submit():
-        name = "denis"
+        print("form_data",login.email.data,login.password.data)
         user = User.query.filter_by(email=login.email.data).first()
-        user_data = user_schema.dump(user)
-        if name:
+        print("user_data",user)
+        if user and bcrypt.check_password_hash(user.password, login.password.data):
             next_page = request.args.get("next")
-            # login_user(user)
+            login_user(user)
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash("Login unsuccessful Please Check Email and Password", "danger ")
@@ -155,6 +170,7 @@ def login():
 
 
 @app.route("/register", methods=["GET", "POST"])
+# @login_required
 def register():
     # checking if the current user is logged
     if current_user.is_authenticated:
@@ -165,7 +181,7 @@ def register():
         # hashing the password
         hashed_password = bcrypt.generate_password_hash(register.password.data).decode("utf-8")
         # adding the password to the database
-        user = User(username=register.username.data, email=register.email.data, password=hashed_password,image_file="")
+        user = User(username=register.username.data, email=register.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
 
@@ -175,12 +191,15 @@ def register():
 
 
 # new routes
+
 @app.route("/extras/desktop")
+@login_required
 def desktop_app():
     pass
 
 
 @app.route("/extras/mobile")
+@login_required
 def mobile_app():
     pass
 
@@ -188,17 +207,108 @@ def mobile_app():
 ''' working with users'''
 
 
-@app.route("/extras/users/add")
+@app.route("/extras/users/add",methods=["GET","POST"])
+@login_required
 def add_users():
-    pass
+    # getting user data from the database
+    user_data = User.query.all()
+
+    # return form to add a user
+    register = RegisterForm()
+
+    if register.validate_on_submit():
+        # hashing the password
+        hashed_password = bcrypt.generate_password_hash(register.password.data).decode("utf-8")
+        # adding the password to the database
+        user = User(username=register.username.data, email=register.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+
+        flash(f"Account Created successfully", "success")
+
+    return render_template("add_users.html", form=register,data=user_data)
 
 
 @app.route("/extras/users/view")
+@login_required
 def view_users():
     pass
 
 
 @app.route("/extras/users/manage")
+@login_required
 def manage_users():
     pass
+
+
+# SEARCHING ROUTE
+@app.route("/help/search/<int:id>",methods=["GET","POST"])
+@login_required
+def search(id):
+    print(id)
+    search_data = {
+        "title" : "This will be the subjects",
+        "dateAdded" : "Teuseday, 21 January 2020",
+        "issueType" : "Payments",
+        "solution" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab aliquam animi asperiores beatae blanditiis consequatur cupiditate debitis delectus deleniti dolor dolore dolores dolorum esse harum impedit in, ipsum maiores minima perspiciatis possimus quaerat recusandae reprehenderit sunt ut vero voluptatibus! Amet aspernatur consectetur cumque dolores enim et, exercitationem ipsam ipsum iste, laboriosam neque nobis nulla quasi rem repellat sequi tenetur ullam velit veniam voluptatum! Accusantium cum distinctio dolore ea facere incidunt iusto, labore pariatur perspiciatis placeat quo quod quos tenetur veritatis voluptatem. Alias aliquam atque beatae dicta dolore doloribus ea eaque earum eius est eum exercitationem explicabo facere incidunt inventore ipsum laudantium magni nam odit, officiis optio quibusdam quidem, reprehenderit tempore unde ut velit voluptas! Adipisci aliquid aspernatur beatae consequatur deleniti doloremque dolores doloribus dolorum explicabo facilis fugiat fugit ipsa ipsum itaque magnam mollitia nesciunt nulla odit omnis placeat porro praesentium, quae qui quisquam ratione repellat repellendus sed sunt voluptate voluptatibus. Consectetur libero neque sapiente veniam voluptates. Alias aliquam aliquid architecto asperiores aut commodi corporis cupiditate doloremque est id itaque iusto maxime minima modi nam necessitatibus, numquam quasi quis reiciendis reprehenderit repudiandae sed sint sunt suscipit vel veniam vitae. Consectetur dignissimos ea eligendi error in minus modi possimus recusandae soluta."
+    }
+    # there should be a solution database || FAQ
+    return render_template("search.html",data=search_data)
+
+
+# the edit routes
+@app.route("/branch/edit/<int:id>",methods=["GET","POST"])
+@login_required
+def edit_branch(id):
+    company_data = Company.query.all()
+    form_branch_data = Branch.query.get(id)
+    print(form_branch_data)
+    # setting form inputs to the data in the database
+
+    service_data = Service.query.all()
+    # init the form
+    branch = BranchForm()
+    branch.name.data = form_branch_data.name
+    branch.longitude.data = form_branch_data.longitude
+    branch.latitude.data = form_branch_data.latitude
+    branch.service.data = form_branch_data.service
+    branch.opens.data = form_branch_data.opens
+    branch.closes.data = form_branch_data.closes
+    branch.company.data = form_branch_data.company
+    branch.description.data = form_branch_data.description
+    if branch.validate_on_submit():
+        # get specific compan data
+        this_company_data = Company.query.get(branch.company.data)
+        if this_company_data:
+            data = Branch(branch.name.data, branch.company.data, branch.longitude.data, branch.latitude.data,
+                          branch.opens.data,
+                          branch.closes.data, branch.service.data, branch.description.data)
+            db.session.add(data)
+            db.session.commit()
+            branch.name.data = ""
+            branch.company.data = ""
+            branch.longitude.data = ""
+            branch.latitude.data = ""
+            branch.opens.data = ""
+            branch.closes.data = ""
+            branch.service.data = ""
+            branch.description.data = ""
+            flash(f"Branch Successfully Updated", "success")
+            redirect(url_for("view_branch"))
+        else:
+            flash("Company Does Not exist. Add copmany name first.", "danger")
+
+    return render_template("edit_branch.html", form=branch, companies=company_data, services=service_data)
+
+
+@app.route("/branch/delete/<int:id>",methods=["GET","POST"])
+@login_required
+def delete_branch(id):
+    # get the branch data
+    branch_data = Branch.query.all()
+    # init the form
+    branch = BranchForm()
+    return render_template("delete_branch.html", form=branch, data=branch_data)
+
+
 

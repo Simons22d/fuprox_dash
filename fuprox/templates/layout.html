@@ -24,6 +24,9 @@
   <link href="{{ url_for('static',filename='lib/animate/animate.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static',filename='lib/ionicons/css/ionicons.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static',filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+<!--    <script src="{{ url_for('static',filename='lib/Chartjs/Chart.js') }}"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <!--    date air piccker -->
 
 
@@ -55,12 +58,24 @@
       {% block nav %}{% endblock %}
     </div>
   </nav>
+
+
+
   <!--/ Nav End /-->
   <!--/ Intro Single star /-->
-  {% block status %}{% endblock %}
+  {% block status %}
+
+  {% endblock %}
   <!--/ Intro Single End /-->
 <!--container-->
 <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+            {% for category,message in messages %}
+            <div class="alert alert-{{ category }} col-lg-6">{{message}}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
   {% block content %}{% endblock %}
 </div>
 <!--  end container-->
@@ -80,10 +95,8 @@
           <!-- Template Main Javascript File -->
           <script src="{{ url_for('static',filename='js/main.js') }}"></script>
           <script src="{{ url_for('static',filename='js/utility.js') }}"></script>
-          <script src="{{ url_for('static',filename='js/maps.js') }}"></script>
-          <script
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLa1ip_JY3cCbq9YU63nZjBKYE8RUcn88&callback=initMap"
-            async defer></script>
+
+
 
 </body>
 
