@@ -8,7 +8,6 @@ from datetime import datetime
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
 # we are going to create the model from a user class
 # the user mixen adds certain fields that are required matain the use session
 # it will add certain fileds to the user class tha are essential to the user login
@@ -27,7 +26,6 @@ class User(db.Model, UserMixin):
         self.email = email
         self.password = password
 
-
 # creating a company class
 class Company(db.Model):
     id = db.Column(db.Integer,primary_key=True)
@@ -40,8 +38,6 @@ class Company(db.Model):
 
     def __repr__(self):
         return f"Company {self.name} -> {self.service}"
-
-
 
 # creating a branch class
 class Branch(db.Model):
@@ -66,6 +62,10 @@ class Branch(db.Model):
         self.service = service
         self.description = description
 
+# creating branch Schema
+class BranchSchema(ma.Schema):
+    class Meta:
+        fields = ('id','name','company','address','longitude','latitude','opens','closes','service','description')
 
 # creating a user class
 # creating a company class
@@ -81,29 +81,14 @@ class Service(db.Model):
     def __repr__(self):
         return f"Company {self.name} -> {self.service}"
 
-
 class Help(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     topic = db.Column(db.String(length=100), nullable=False, unique=True)
     title = db.Column(db.String(length=250), nullable=False)
     solution = db.Column(db.Text, nullable=False)
-    date_added = db.Column(db.DateTime, default=datetime.now)
+    date_added = db.Column(db.DateTime, default=datetime.now, nullable=False)
 
     def __init__(self, topic, title, solution):
         self.topic = topic
         self.title = title
         self.solution = solution
-
-
-# defining a class for topics
-class Topic(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(length=100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    date_added = db.Column(db.DateTime, default=datetime.now)
-
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-
-

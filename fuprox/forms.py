@@ -101,6 +101,18 @@ class ServiceForm(FlaskForm):
     submit = SubmitField("Add Service")
 
 
+class SolutionForm(FlaskForm):
+    title = StringField("Title",validators=[DataRequired()])
+    topic = StringField("Topic", validators=[DataRequired()])
+    solution = TextAreaField("Solution", validators=[DataRequired()])
+    submit = SubmitField("Add Solution")
+
+
+
+class SearchForm(FlaskForm):
+    term = StringField("Term",validators=[DataRequired()])
+    submit = SubmitField("Search")
+
 # class RegisterForm(FlaskForm):
 #     username = StringField("Username", validators=[DataRequired(), Length(min=2, max=12)])
 #     email = StringField("Email", validators=[DataRequired(), Email()])

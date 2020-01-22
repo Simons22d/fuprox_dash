@@ -2,7 +2,7 @@ import logging
 import sys
 
 # setting the logger
-logging.basicConfig(filename="logger.txt",level=logging.DEBUG)
+logging.basicConfig(filename="logger.log",level=logging.DEBUG)
 
 
 class User:

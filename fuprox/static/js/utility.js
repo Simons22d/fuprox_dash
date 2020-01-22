@@ -1,5 +1,7 @@
-var ctx = document.getElementById('doughnut').getContext('2d');
-var doughnut = new Chart(ctx, {
+
+let ctx = document.getElementById('doughnut').getContext('2d');
+
+let doughnut = new Chart(ctx, {
     type: 'doughnut',
     data: {
         labels: ["New","Assigned","Resolved","Closed"],
@@ -20,8 +22,8 @@ var doughnut = new Chart(ctx, {
 });
 
 
-var ctx = document.getElementById('myChart').getContext('2d');
-var make = new Chart(ctx, {
+let name = document.getElementById('myChart').getContext('2d');
+let make = new Chart(name, {
     type: 'doughnut',
     data: {
         labels: ["New","Assigned","Resolved","Closed"],

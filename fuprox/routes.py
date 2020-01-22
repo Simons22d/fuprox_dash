@@ -2,12 +2,11 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from fuprox import app, db, ma,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, ResetRequest, ResetPassword, BranchForm,
-                          OrganizationForm,ServiceForm)
+                          OrganizationForm,ServiceForm,SolutionForm,SearchForm)
 
-from fuprox.models import User,Company,Branch, Service
+from fuprox.models import User,Company,Branch, Service,Help
 import json
 import jsonify
-
 
 # rendering many route to the same template
 
@@ -130,10 +129,19 @@ def view_category():
     return render_template("view_category.html", form=branch, data=service_data)
 
 
-@app.route("/help")
+@app.route("/help",methods=["GET","POST"])
 @login_required
 def help():
-    return render_template("help.html")
+    # init form
+    # search_form = SearchForm()
+    # if(search_form.validate_on_submit()):
+    #     # make a query to the database
+    #     data = Help.query.filter_by(solution=search_form.term.data).all()
+    #     # Model.query.filter(Model.columnName.contains('sub_string'))
+    #     redirect("search_result.html",200,data=data)
+    # get data from the solutions page
+    solution_data = Help.query.all()
+    return render_template("help.html",data = solution_data)
 
 
 @app.route("/extras")
@@ -205,8 +213,6 @@ def mobile_app():
 
 
 ''' working with users'''
-
-
 @app.route("/extras/users/add",methods=["GET","POST"])
 @login_required
 def add_users():
@@ -242,18 +248,34 @@ def manage_users():
 
 
 # SEARCHING ROUTE
-@app.route("/help/search/<int:id>",methods=["GET","POST"])
+@app.route("/help/solution/<int:id>",methods=["GET","POST"])
 @login_required
 def search(id):
-    print(id)
-    search_data = {
-        "title" : "This will be the subjects",
-        "dateAdded" : "Teuseday, 21 January 2020",
-        "issueType" : "Payments",
-        "solution" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab aliquam animi asperiores beatae blanditiis consequatur cupiditate debitis delectus deleniti dolor dolore dolores dolorum esse harum impedit in, ipsum maiores minima perspiciatis possimus quaerat recusandae reprehenderit sunt ut vero voluptatibus! Amet aspernatur consectetur cumque dolores enim et, exercitationem ipsam ipsum iste, laboriosam neque nobis nulla quasi rem repellat sequi tenetur ullam velit veniam voluptatum! Accusantium cum distinctio dolore ea facere incidunt iusto, labore pariatur perspiciatis placeat quo quod quos tenetur veritatis voluptatem. Alias aliquam atque beatae dicta dolore doloribus ea eaque earum eius est eum exercitationem explicabo facere incidunt inventore ipsum laudantium magni nam odit, officiis optio quibusdam quidem, reprehenderit tempore unde ut velit voluptas! Adipisci aliquid aspernatur beatae consequatur deleniti doloremque dolores doloribus dolorum explicabo facilis fugiat fugit ipsa ipsum itaque magnam mollitia nesciunt nulla odit omnis placeat porro praesentium, quae qui quisquam ratione repellat repellendus sed sunt voluptate voluptatibus. Consectetur libero neque sapiente veniam voluptates. Alias aliquam aliquid architecto asperiores aut commodi corporis cupiditate doloremque est id itaque iusto maxime minima modi nam necessitatibus, numquam quasi quis reiciendis reprehenderit repudiandae sed sint sunt suscipit vel veniam vitae. Consectetur dignissimos ea eligendi error in minus modi possimus recusandae soluta."
-    }
+    # get data from the database based on the data provided
+    data = Help.query.get(id)
     # there should be a solution database || FAQ
-    return render_template("search.html",data=search_data)
+    return render_template("search.html",data=data)
+
+
+@app.route("/help/solution/add",methods=["GET","POST"])
+@login_required
+def add_solution():
+    solution_form = SolutionForm()
+    if solution_form.validate_on_submit():
+
+        topic = solution_form.topic.data
+        title = solution_form.title.data
+        sol = solution_form.solution.data
+
+        solution_data = Help(topic,title,sol)
+        db.session.add(solution_data)
+        db.session.commit()
+        flash("Solution Added Successfully","success")
+
+        # render a html && add the data to the page
+    return render_template("add_solution.html",form=solution_form)
+
+
 
 
 # the edit routes
@@ -261,30 +283,38 @@ def search(id):
 @login_required
 def edit_branch(id):
     company_data = Company.query.all()
-    form_branch_data = Branch.query.get(id)
-    print(form_branch_data)
+    data = Branch.query.get(id)
     # setting form inputs to the data in the database
 
     service_data = Service.query.all()
     # init the form
     branch = BranchForm()
-    branch.name.data = form_branch_data.name
-    branch.longitude.data = form_branch_data.longitude
-    branch.latitude.data = form_branch_data.latitude
-    branch.service.data = form_branch_data.service
-    branch.opens.data = form_branch_data.opens
-    branch.closes.data = form_branch_data.closes
-    branch.company.data = form_branch_data.company
-    branch.description.data = form_branch_data.description
+    branch.name.data = data.name
+    branch.longitude.data = data.longitude
+    branch.latitude.data = data.latitude
+    branch.service.data = data.service
+    branch.opens.data = data.opens
+    branch.closes.data = data.closes
+    branch.company.data = data.company
+    branch.description.data = data.description
     if branch.validate_on_submit():
         # get specific compan data
         this_company_data = Company.query.get(branch.company.data)
         if this_company_data:
-            data = Branch(branch.name.data, branch.company.data, branch.longitude.data, branch.latitude.data,
-                          branch.opens.data,
-                          branch.closes.data, branch.service.data, branch.description.data)
-            db.session.add(data)
+            # update data in the database 
+            data.name = branch.name.data
+            data.longitude = branch.longitude.data
+            data.latitude = branch.latitude.data
+            data.service = branch.service.data
+            data.opens = branch.opens.data
+            data.closes = branch.closes.data
+            data.company = branch.company.data
+            data.description = branch.description.data
+            
+            # update date to the database
             db.session.commit()
+
+            # prefilling the form with the empty fields
             branch.name.data = ""
             branch.company.data = ""
             branch.longitude.data = ""
@@ -309,6 +339,3 @@ def delete_branch(id):
     # init the form
     branch = BranchForm()
     return render_template("delete_branch.html", form=branch, data=branch_data)
-
-
-
