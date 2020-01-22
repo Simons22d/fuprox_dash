@@ -2,7 +2,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField,FileAllowed
 from flask_login import current_user
-from wtforms import StringField,PasswordField,SubmitField,BooleanField,TextAreaField
+from wtforms import StringField,PasswordField,SubmitField,BooleanField,TextAreaField,RadioField,SelectField
 from wtforms.validators import DataRequired, Length,Email,EqualTo,InputRequired,ValidationError
 from fuprox.models import User
 from flask import flash
@@ -89,7 +89,7 @@ class BranchForm(FlaskForm):
     submit = SubmitField("Add Branch")
 
 
-class OrganizationForm(FlaskForm):
+class CompanyForm(FlaskForm):
     name = StringField("Name",validators=[DataRequired()])
     service = StringField("Service Type",validators=[DataRequired()])
     submit = SubmitField("Add Organization")
@@ -101,7 +101,7 @@ class ServiceForm(FlaskForm):
     submit = SubmitField("Add Service")
 
 
-class SolutionForm(FlaskForm):
+class ReportForm(FlaskForm):
     title = StringField("Title",validators=[DataRequired()])
     topic = StringField("Topic", validators=[DataRequired()])
     solution = TextAreaField("Solution", validators=[DataRequired()])
@@ -110,8 +110,14 @@ class SolutionForm(FlaskForm):
 
 
 class SearchForm(FlaskForm):
-    term = StringField("Term",validators=[DataRequired()])
-    submit = SubmitField("Search")
+    format = RadioField("Format",validators=[DataRequired()],Type=str,choices=["PDF", "Excel"])
+    type = SelectField("Type",validators=[DataRequired()],Type=str,choices=["Bookings", "Branch", "Payments", "All"])
+    period = SelectField("Period",validators=[DataRequired()],Type=str,choices=["Daily", "Weekly", "Monthly", "Yearly", "All"])
+    duration = SelectField("Duration",validators=[DataRequired()],Type=str,choices=["Daily","Weekly","Monthly","Yearly","All"])
+    week = SelectField("Week",validators=[DataRequired()],Type=str, choices=["One","Two","Three","Four"])
+    monthly = SelectField("Monthly",validators=[DataRequired()],Type=str, choices=["January","February","March","April","May","June","July","August","September","October","November","December"])
+    submit = SubmitField("Generate Report")
+
 
 # class RegisterForm(FlaskForm):
 #     username = StringField("Username", validators=[DataRequired(), Length(min=2, max=12)])

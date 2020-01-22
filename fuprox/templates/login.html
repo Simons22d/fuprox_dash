@@ -8,43 +8,54 @@
  {% endfor %}
  {% endfor %}
 {% block content %}
-    <form action="" method="POST" class="col-lg-4 mt-5">
-            {{ form.hidden_tag() }}
-        <h5 >Login From</h5  >
-        <br>
-        <div class="form-group">
-            {{ form.email.label(class='form-control-label')}}
-            {% if form.email.errors %}
-            {{ form.email(class="form-control is-invalid")}}
-            <div class="invalid-feedback">
-                {% for error in form.email.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}          
-            </div>
-            {% else %}
-                {{ form.email(class="form-control")}}
-            {% endif %}
+     <style>
+         #logo{
+             display :none;
+         }
+     </style>
+     <div class="row"></div>
+     <br><br><br>
+     <div class="row col-lg-12">
+        <div class="col-lg-4 offset-lg-4 col-md-8 offset-md-2">
+            <a class="navbar-brand text-brand" href="#">No<span class="color-b">Queue</span></a>
+            <form action="" method="POST" class="">
+                {{ form.hidden_tag() }}
+                <h5 class="text-muted"> <u>Login</u></h5><br>
+                <div class="form-group">
+                    {{ form.email.label(class='form-control-label')}}
+                    {% if form.email.errors %}
+                    {{ form.email(class="form-control  form-control-smis-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.email(class="form-control form-control-sm")}}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-control-label")}}
+                    {% if form.password.errors %}
+                    {{ form.password(class="form-control  form-control-smis-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.password.errors %}
+                        <span>{{error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.password(class="form-control form-control-sm") }}
+                    {% endif %}
+                </div>
+                <div class="form-group mt-3">
+                    {{ form.submit(class="btn btn-sm btn-success btn-block mt-4")}}
+                </div>
+                <div class="form-group">
+                    <small class="text-muted">
+                        <!--                Need An Account ? <a href="{{ url_for('register') }}">Register</a>-->
+                    </small>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            {{ form.password.label(class="form-control-label")}}
-            {% if form.password.errors %}
-            {{ form.password(class="form-control is-invalid")}}
-            <div class="invalid-feedback">
-                {% for error in form.password.errors %}
-                <span>{{error }}</span>
-                {% endfor %}
-            </div>
-            {% else %}
-            {{ form.password(class="form-control") }}
-            {% endif %}
-        </div>
-        <div class="form-group">
-            {{ form.submit(class="btn btn-success btn-block mt-4")}}
-        </div>
-        <div class="form-group">
-            <small class="text-muted">
-<!--                Need An Account ? <a href="{{ url_for('register') }}">Register</a>-->
-           </small>
-        </div>
-    </form>
+     </div>
 {% endblock content %}

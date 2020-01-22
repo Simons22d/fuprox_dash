@@ -1,12 +1,8 @@
 from flask import render_template, url_for, flash, redirect, request, abort
-from fuprox import app, db, ma,bcrypt
+from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
-from fuprox.forms import (RegisterForm, LoginForm, ResetRequest, ResetPassword, BranchForm,
-                          OrganizationForm,ServiceForm,SolutionForm,SearchForm)
-
+from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, ReportForm)
 from fuprox.models import User,Company,Branch, Service,Help
-import json
-import jsonify
 from datetime import datetime 
 
 # rendering many route to the same template
@@ -15,9 +11,12 @@ from datetime import datetime
 @app.route("/dashboard")
 @login_required
 def home():
+    # date
     date = datetime.now().strftime("%A, %d %B %Y")
+    # report form
+    report = ReportForm()
     # rendering template
-    return render_template("branches.html",today=date)
+    return render_template("dashboard.html",today=date,form=report)
 
 
 @app.route("/payments")
@@ -30,7 +29,8 @@ def payments():
 @app.route("/branches")
 @app.route("/branches/add",methods=["POST","GET"])
 @login_required
-def branches():# get data from the database
+def branches():
+    # get data from the database
     company_data = Company.query.all()
     service_data = Service.query.all()
     # init the form
@@ -94,7 +94,7 @@ def add_category():
 def add_company():
     service_data = Service.query.all()
     # init the form
-    company = OrganizationForm()
+    company = CompanyForm()
     if company.validate_on_submit():
         # getting if the company type exists within the service types
         service_type  = Service.query.get(int(company.service.data))
@@ -353,7 +353,7 @@ def edit_company(id):
     # setting form inputs to the data in the database
     services = Service.query.all()
     # # init the form
-    company = OrganizationForm()
+    company = CompanyForm()
     if company.validate_on_submit():
         # update data in the database 
         this_company.name = company.name.data
