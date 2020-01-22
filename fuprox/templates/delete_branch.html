@@ -81,20 +81,6 @@
 {% block content %}
      <!--/ Property Grid Star /-->
 
-    <div class="row">
-      <div class="col-lg-6 ">
-         {% for field in form.errors %}
-         {% for error in form.errors[field] %}
-             <div class="alert alert-error">
-                 <strong>Error!</strong> {{error}}
-             </div>
-         {% endfor %}
-         {% endfor %}
-<!--        <div class="row container mb-3"><div class="text-muted">Companies</div>-->
-        <br>
-      </div>
-      </div>
-
     <div>
       <!-- data -->
       <!--

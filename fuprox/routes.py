@@ -7,6 +7,7 @@ from fuprox.forms import (RegisterForm, LoginForm, ResetRequest, ResetPassword, 
 from fuprox.models import User,Company,Branch, Service,Help
 import json
 import jsonify
+from datetime import datetime 
 
 # rendering many route to the same template
 
@@ -14,8 +15,9 @@ import jsonify
 @app.route("/dashboard")
 @login_required
 def home():
+    date = datetime.now().strftime("%A, %d %B %Y")
     # rendering template
-    return render_template("branches.html")
+    return render_template("branches.html",today=date)
 
 
 @app.route("/payments")
@@ -198,7 +200,7 @@ def register():
     return render_template("register.html", form=register)
 
 
-# new routes
+# new ]
 
 @app.route("/extras/desktop")
 @login_required
@@ -283,51 +285,50 @@ def add_solution():
 @login_required
 def edit_branch(id):
     company_data = Company.query.all()
-    data = Branch.query.get(id)
+    branch_data = Branch.query.get(id)
     # setting form inputs to the data in the database
 
     service_data = Service.query.all()
     # init the form
     branch = BranchForm()
-    branch.name.data = data.name
-    branch.longitude.data = data.longitude
-    branch.latitude.data = data.latitude
-    branch.service.data = data.service
-    branch.opens.data = data.opens
-    branch.closes.data = data.closes
-    branch.company.data = data.company
-    branch.description.data = data.description
     if branch.validate_on_submit():
-        # get specific compan data
-        this_company_data = Company.query.get(branch.company.data)
-        if this_company_data:
-            # update data in the database 
-            data.name = branch.name.data
-            data.longitude = branch.longitude.data
-            data.latitude = branch.latitude.data
-            data.service = branch.service.data
-            data.opens = branch.opens.data
-            data.closes = branch.closes.data
-            data.company = branch.company.data
-            data.description = branch.description.data
+        # update data in the database 
+        branch_data.name = branch.name.data
+        branch_data.longitude = branch.longitude.data
+        branch_data.latitude = branch.latitude.data
+        branch_data.service = branch.service.data
+        branch_data.opens = branch.opens.data
+        branch_data.closes = branch.closes.data
+        branch_data.company = branch.company.data
+        branch_data.description = branch.description.data
+        
+        # update date to the database
+        db.session.commit()
+
+        # prefilling the form with the empty fields
+        branch.name.data = ""
+        branch.company.data = ""
+        branch.longitude.data = ""
+        branch.latitude.data = ""
+        branch.opens.data = ""
+        branch.closes.data = ""
+        branch.service.data = ""
+        branch.description.data = ""
+        flash("Branch Successfully Updated", "success")
+        return redirect(url_for("view_branch"))
+    elif request.method == "GET":
+        branch.name.data = branch_data.name
+        branch.longitude.data = branch_data.longitude
+        branch.latitude.data = branch_data.latitude
+        branch.service.data = branch_data.service
+        branch.opens.data = branch_data.opens
+        branch.closes.data = branch_data.closes
+        branch.company.data = branch_data.company
+        branch.description.data = branch_data.description
+
+    else:
+        flash("Company Does Not exist. Add copmany name first.", "danger")
             
-            # update date to the database
-            db.session.commit()
-
-            # prefilling the form with the empty fields
-            branch.name.data = ""
-            branch.company.data = ""
-            branch.longitude.data = ""
-            branch.latitude.data = ""
-            branch.opens.data = ""
-            branch.closes.data = ""
-            branch.service.data = ""
-            branch.description.data = ""
-            flash(f"Branch Successfully Updated", "success")
-            redirect(url_for("view_branch"))
-        else:
-            flash("Company Does Not exist. Add copmany name first.", "danger")
-
     return render_template("edit_branch.html", form=branch, companies=company_data, services=service_data)
 
 
@@ -335,7 +336,77 @@ def edit_branch(id):
 @login_required
 def delete_branch(id):
     # get the branch data
-    branch_data = Branch.query.all()
+    branch_data = Branch.query.get(id)
+    db.session.delete(branch_data)
+    db.session.commit()
+    flash("Branch Deleted Sucessfully","success")
     # init the form
     branch = BranchForm()
     return render_template("delete_branch.html", form=branch, data=branch_data)
+
+
+# edit company
+@app.route("/company/edit/<int:id>",methods=["GET","POST"])
+@login_required
+def edit_company(id):
+    this_company = Company.query.get(id)
+    # setting form inputs to the data in the database
+    services = Service.query.all()
+    # # init the form
+    company = OrganizationForm()
+    if company.validate_on_submit():
+        # update data in the database 
+        this_company.name = company.name.data
+        this_company.service = company.service.data
+        
+        # update date to the database
+        db.session.commit()
+
+        # prefilling the form with the empty fields
+        company.name.data = ""
+        company.service.data = ""
+    
+        flash("Company Successfully Updated", "success")
+
+        return redirect(url_for("view_company"))
+    elif request.method == "GET":
+        company.name.data = this_company.name
+        company.service.data = this_company.service
+        
+
+    else:
+        flash("Company Does Not exist. Add copmany name first.", "danger")
+            
+    return render_template("edit_company.html", form=company, services=services)
+
+
+
+# edit company
+@app.route("/category/edit/<int:id>",methods=["GET","POST"])
+@login_required
+def edit_category(id):
+    this_category = Service.query.get(id)
+    # setting form inputs to the data in the database
+    # # init the form
+    service = ServiceForm()
+    if service.validate_on_submit():
+        # update data in the database 
+        this_category.name = service.name.data
+        this_category.service = service.service.data
+        
+        # update date to the database
+        db.session.commit()
+
+        # prefilling the form with the empty fields
+        service.name.data = ""
+        service.service.data = ""
+    
+        flash("Company Successfully Updated", "success")
+        return redirect(url_for("view_category"))
+
+    elif request.method == "GET":
+        service.name.data = this_category.name
+        service.service.data = this_category.service
+    else:
+        flash("Company Does Not exist. Add company name first.", "danger")
+    return render_template("edit_category.html", form=service)

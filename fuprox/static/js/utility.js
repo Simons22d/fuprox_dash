@@ -9,7 +9,7 @@ let doughnut = new Chart(ctx, {
             {
                 label: "Population (millions)",
                 backgroundColor: ["Red","Orange","Yellow","Green"],
-                data: [0,0,2,0]
+                data: [0,2,2,0]
             }
         ]
     },
