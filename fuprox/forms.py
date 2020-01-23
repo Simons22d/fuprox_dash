@@ -101,7 +101,7 @@ class ServiceForm(FlaskForm):
     submit = SubmitField("Add Service")
 
 
-class ReportForm(FlaskForm):
+class SolutionForm(FlaskForm):
     title = StringField("Title",validators=[DataRequired()])
     topic = StringField("Topic", validators=[DataRequired()])
     solution = TextAreaField("Solution", validators=[DataRequired()])
@@ -109,7 +109,7 @@ class ReportForm(FlaskForm):
 
 
 
-class SearchForm(FlaskForm):
+class ReportForm(FlaskForm):
     format = RadioField("Format",validators=[DataRequired()],Type=str,choices=["PDF", "Excel"])
     type = SelectField("Type",validators=[DataRequired()],Type=str,choices=["Bookings", "Branch", "Payments", "All"])
     period = SelectField("Period",validators=[DataRequired()],Type=str,choices=["Daily", "Weekly", "Monthly", "Yearly", "All"])

@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
-from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, ReportForm)
+from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
 from fuprox.models import User,Company,Branch, Service,Help
 from datetime import datetime 
 
@@ -14,9 +14,9 @@ def home():
     # date
     date = datetime.now().strftime("%A, %d %B %Y")
     # report form
-    report = ReportForm()
+    # report = ReportForm()
     # rendering template
-    return render_template("dashboard.html",today=date,form=report)
+    return render_template("dashboard.html",today=date)
 
 
 @app.route("/payments")
@@ -70,7 +70,6 @@ def view_branch():
     return render_template("view_branch.html",form=company,data = branches_data)
 
 
-
 @app.route("/branches/category")
 @app.route("/branches/category/add",methods=["POST","GET"])
 @login_required
@@ -85,7 +84,6 @@ def add_category():
         company.service.data = ""
         flash(f"Service Successfully Added", "success")
     return render_template("add_category.html", form=company)
-
 
 
 @app.route("/branches/company", methods=["GET", "POST"])
@@ -134,14 +132,6 @@ def view_category():
 @app.route("/help",methods=["GET","POST"])
 @login_required
 def help():
-    # init form
-    # search_form = SearchForm()
-    # if(search_form.validate_on_submit()):
-    #     # make a query to the database
-    #     data = Help.query.filter_by(solution=search_form.term.data).all()
-    #     # Model.query.filter(Model.columnName.contains('sub_string'))
-    #     redirect("search_result.html",200,data=data)
-    # get data from the solutions page
     solution_data = Help.query.all()
     return render_template("help.html",data = solution_data)
 
