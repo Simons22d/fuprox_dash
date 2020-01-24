@@ -122,47 +122,6 @@
         </div>
     </div>
 <style>
-    .widget_card{
-        border-radius:10px;
-        padding :15px 10px 20px 20px;
-        background-color : #efefef;
-        height : 120px;
-        margin-bottom : 20px;
-        cursor : pointer;
-    }
-    .header{
-        font-size : 16px;
-        font-weight : 600;
-        color : #999;
-    }
-
-    .body {
-        font-size : 14px;
-        color : #555;
-    }
-    span.time{
-        color :#aaa;
-        font-size : 12px;
-    }
-    .urgent{
-        color : red;
-        font-weight : 600;
-        margin-left : 130px;
-        font-size : 10px;
-        border : 2px solid red;
-        padding : 2px 4px;
-        border-radius : 4px;
-    }
-    .medium{
-        border : 2px solid blue;
-        color : blue;
-    }
-    .inHeaders{
-        font-size : 16px;
-        font-weight : 600;
-        text-align:center;
-        color : #777;
-    }
     .reports{
         margin-left : 0px;
     }
@@ -194,29 +153,29 @@
         <div class="col-lg-3">
                 <label for="frequency">Duration</label>
                 <select class="form-control form-control-sm" id="frequency" name="frequency" onchange="getFrequency(this);">
-                        <option id="periodOne"  selected value="null">Select The Frequency</option>
-                        <option class="period" id="daily" value="day">Daily Reports</option>
-                        <option class="period" id="weekly" value="week">Weekly Reports</option>
-                        <option class="period" id="monthly" value="month">monthly Reports</option>
-                    </select>
+                    <option id="periodOne"  selected value="null">Select The Frequency</option>
+                    <option class="period" id="daily" value="day">Daily Reports</option>
+                    <option class="period" id="weekly" value="week">Weekly Reports</option>
+                    <option class="period" id="monthly" value="month">monthly Reports</option>
+                </select>
         </div>
             <div class="col-lg-3" >
                     <label for="type">Issue Type</label>
                     <select class="form-control form-control-sm" id="type" name="type"  disabled>
-                            <option id="statusOne" selected value="null">Issue Type</option>
-                            <option class="status" id="all" value="6">All Issues</option>
-                            <option class="status" id="new" value="0">New Issues</option>
-                            <option class="status" id="assigned" value="1">Assigned Issues</option>
-                            <option class="status" id="resolved" value="2">Resolved Issues</option>
-                            <option class="status" id="escalated" value="5">Escalated Issues</option>
-                            <option class="status" id="closed" value="3">Closed Issues</option>
-                        </select>
+                        <option id="statusOne" selected value="null">Issue Type</option>
+                        <option class="status" id="all" value="6">All Issues</option>
+                        <option class="status" id="new" value="0">New Issues</option>
+                        <option class="status" id="assigned" value="1">Assigned Issues</option>
+                        <option class="status" id="resolved" value="2">Resolved Issues</option>
+                        <option class="status" id="escalated" value="5">Escalated Issues</option>
+                        <option class="status" id="closed" value="3">Closed Issues</option>
+                    </select>
             </div>
 
             <!-- time -->
             <div class="col-lg-3" id="dateCont">
-                <label for="date">Select Date</label>
-                <input readonly type="text" class="form-control form-control-sm" id="date" name="datePackerOne">
+                <label for="dailyCal">Select Date</label>
+                <input type="text" type="text" readonly class="form-control form-control-sm" id="dailyCal" name="daily">
             </div>
 
             <div class="col-lg-3" id="monthCont" style="display: none;" >
@@ -263,168 +222,4 @@
             </tbody>
         </table>
     </div>
-
-<script>
-    function getFrequency(item){
-    thisVal =  item.value;
-    if(thisVal === "null"){
-        $("#type").prop("disabled",true);
-        $("#statusOne").prop("selected",true);
-    }else if(thisVal === 'day'){
-        $("#type").removeAttr("disabled");
-        $("#dateCont").show();
-        $("#monthCont").hide();
-        $("#weekCont").hide();
-    }else if(thisVal === "week"){
-        $("#type").removeAttr("disabled");
-        $("#dateCont").hide();
-        $("#monthCont").show();
-        $("#weekCont").show();
-
-    }else if(thisVal === 'month'){
-        $("#type").removeAttr("disabled");
-        $("#dateCont").hide();
-        $("#monthCont").show();
-        $("#weekCont").hide();
-    }
-}
-
-const daysInMonth  = (month, year) => {
-    return new Date(year, month, 0).getDate();
-}
-
-const updateWeek = (item) => {
-    let month = $("#month").val()
-    if(month !== ""){
-        let daysInMonths = new Date(month);
-        let yearDate = daysInMonths.getFullYear();
-        let monthDate = daysInMonths.getMonth()+1;
-        var days = daysInMonth(monthDate,yearDate);
-        let weeks = Math.floor(days/7);
-        let extraDays = days%7;
-        if(extraDays > 0){
-            // five weeks
-            $("#five").show();
-        }else{
-            // four weeks
-            $("#five").hide();
-        }
-    }else{
-        let error = $("#error");
-        let monthHandle = $("#month");
-        error.html("Month Required. Please Select Select A Month")
-        error.show();
-        monthHandle.addClass("is-invalid")
-        setTimeout(()=>{
-            error.hide()
-            monthHandle.removeClass("is-invalid")
-        },5000);
-    }
-}
-
-const datePicker = (handle) =>{
-    $(`#handle`).datepicker({
-        language: 'en',
-        startDate: start,
-        autoClose : true,
-        view : "months",
-        minView : "months",
-        maxDate : start,
-        dataMinView : "months",
-        dataView : "months",
-        position: "top left",
-        onSelect: function (fd, d, picker) {
-            // Do nothing if selection was cleared
-            if (!d) return;
-            var day = d.getDay();
-            // Trigger only if date is changed
-            if (prevDay !== undefined && prevDay === day) return;
-            prevDay = day;
-            // If chosen day is Saturday or Sunday when set
-            // hour value for weekends, else restore defaults
-            if (day === 6 || day === 0) {
-                picker.update({
-                    minHours: 10,
-                    maxHours: 16
-                })
-            } else {
-                picker.update({
-                    minHours: 9,
-                    maxHours: 18
-                })
-            }
-        }
-    });
-}
-
-const weekPicker = (handle) => {
-    $(`#handle`).datepicker({
-        timepicker: true,
-        language: 'en',
-        startDate: start,
-        minHours: startHours,
-        maxHours: 18,
-        onSelect: function (fd, d, picker) {
-            // Do nothing if selection was cleared
-            if (!d) return;
-
-            var day = d.getDay();
-
-            // Trigger only if date is changed
-            if (prevDay !== undefined && prevDay === day) return;
-            prevDay = day;
-
-            // If chosen day is Saturday or Sunday when set
-            // hour value for weekends, else restore defaults
-            if (day === 6 || day === 0) {
-                picker.update({
-                    minHours: 10,
-                    maxHours: 16
-                })
-            } else {
-                picker.update({
-                    minHours: 9,
-                    maxHours: 18
-                })
-            }
-        }
-    });
-}
-
-
-    $(`#date`).datepicker({
-        language: 'en',
-        startDate: new Date(),
-        autoClose: true,
-        view: "years",
-        maxDate: new Date(),
-        dataView: "months",
-        position: "top left",
-        onSelect: function (fd, d, picker) {
-            // Do nothing if selection was cleared
-            if (!d) return;
-            var day = d.getDay();
-            // Trigger only if date is changed
-            if (prevDay !== undefined && prevDay === day) return;
-            prevDay = day;
-            // If chosen day is Saturday or Sunday when set
-            // hour value for weekends, else restore defaults
-            if (day === 6 || day === 0) {
-                picker.update({
-                    minHours: 10,
-                    maxHours: 16
-                })
-            } else {
-                picker.update({
-                    minHours: 9,
-                    maxHours: 18
-                })
-            }
-        }
-    });
-
-
-
-</script>
-
 {% endblock %}
