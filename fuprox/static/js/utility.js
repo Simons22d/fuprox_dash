@@ -133,3 +133,163 @@ onSelect: function (fd, d, picker) {
     }
 }
 });
+
+
+$('#generate').on("click",()=>{
+                // generics
+                let period = $("#frequency").val();
+
+                let status = $("#type").val();
+                let date = $("#date").val();
+                // getting the date info
+
+                if(status !== "null" && period !== "null" && (date !== "" || $("#month").val() !== "")){
+                    // date variables
+                    let month,week,date,newDay;
+                    let errorHandle = $("#error");
+                    let generate = $("#generate");
+                    let generating = $("#generating");
+                    let done = $("#done");
+                    // get new date
+                    if(period === 'day'){
+                        // fields : [period,status,date]
+                        date = $("#date").val();
+
+                    }else if(period === 'week'){
+                        // fields : [period,status,month,week]
+                        month = $("#month").val();
+                        week = $("#weeks").val();
+                        let daysInMonths = new Date(month);
+                        let yearDate = daysInMonths.getFullYear();
+                        let monthDate = daysInMonths.getMonth()+1;
+                        let days = daysInMonth(monthDate,yearDate);
+                        // let weekCount = Math.floor(days/7);
+                        // let extraDays = days%7;
+                        /**
+                         * Date format 'MM:DD:YYYY'
+                         * required Date format : 'YYYY:MM:DD'
+                         */
+                        let monthSegments = month.split("/");
+                        let monthDay = Number(monthSegments[1]);
+                        // getting the week numberp
+                        if(week === "null"){
+                            /// week cannot be null
+                            let handle = $("#error");
+                            handle.html("Week Required. Please Select Week")
+                            handle.show();
+                            $("#weeks").addClass("is-invalid")
+                            setTimeout(()=>{
+                                handle.hide()
+                                $("#weeks").removeClass("is-invalid")
+                            },5000);
+                        }else if(Number(week) === 1){
+                            newDay = monthDay+4;
+                        }else if(Number(week) === 2){
+                            newDay = monthDay+9;
+                        }else if(Number(week) === 3){
+                            newDay = monthDay+17;
+                        }else if(Number(week) === 4){
+                            newDay = monthDay+24;
+                        }else if(Number(week) === 5){
+                            newDay = monthDay+28;
+                        }
+                        // there minght be a zero issues here prepending to newDay
+                        date = monthSegments[0]+"/"+newDay+"/"+monthSegments[2];
+
+                    }else if(period === "month"){
+                        // fields : [period,status,month]
+                        /**
+                         * here month is date since it is a monthly report
+                         */
+                        date = $("#month").val();
+
+                    }
+
+                    let unformattedTime = date.split("/").join("-").split("-");
+                    let formattedTime = unformattedTime[2]+"-"+unformattedTime[0]+"-"+unformattedTime[1];
+                    // we are going to make an ajax request based on the data
+                    $.ajax({
+                        url: process,
+                        method: "POST",
+                        data: {
+                            category: "report",
+                            status : status,
+                            period : period,
+                            time : formattedTime
+                        },
+                        beforeSend: ()=>{
+                            $("#spinner").show();
+                            done.hide();
+                            generating.show();
+                            generate.prop("disabled",true)
+                        },
+                        success: function (result) {
+                            let done = 1002;
+
+                            if(parseInt(status) === 6){
+                                if(result.new.length || result.assigned.length > 0 || result.resolved.length > 0 || result.closed.length > 0 ){
+                                    done = 1001;
+                                    let newReport = result.new;
+                                    let assigned = result.assigned;
+                                    let resolved = result.resolved;
+                                    let closed = result.closed;
+                                    generateReport(newReport,"New Issues");
+                                    generateReport(assigned,"Assigned Issues");
+                                    generateReport(resolved,"Resolved Issues");
+                                    generateReport(closed,"Closed Issues");
+                                }
+                            }else{
+                                done =1001
+                                generateReport(result);
+                            }
+                            // end report gen
+                            if(result && done === 1001 ){
+                                setTimeout(()=>{
+                                    let statusMapper = ["New Issues","Assigned Issues","Resolved Issues","Closed Issues","","Escalated Issues","All Issues — {New, Assigned, Resolved,Escalated,Closed}"];
+
+                                let name = `${formattedTime}__${period}__${statusMapper[status]}.xlsx`;
+                                //  excel gen
+                                excel = new ExcelGen({
+                                    "src_id": "report",
+                                    "show_header": true,
+                                    "format": "xlsx",
+                                });
+
+                                excel.generate(name);
+                                // end excel gen
+
+                                    $("#generating").hide()
+                                    errorHandle.show();
+                                    setTimeout(()=>{
+                                        $('#error').hide();
+                                        $("#generate").prop("disabled",false)
+                                    },5000);
+                                },500)
+                            }
+                        },
+                        complete : ()=>{
+                            setTimeout(()=>{ $("#spinner").hide()} ,1000)
+                        }
+                    });
+                }else{
+                    $("#done").hide()
+                    function error(id,msg){
+                        let handle = $("#error");
+                        handle.html(msg)
+                        handle.show();
+                        $(`#${id}`).addClass("is-invalid")
+                        setTimeout(()=>{
+                            handle.hide()
+                            $(`#${id}`).removeClass("is-invalid")
+                        },5000);
+                    }
+                    // some data is not set
+                    if(period === "null"){
+                        error("frequency","Duration Is Required.");
+                    } else if(status === "null"){
+                        error("type","Issue Type Is Required");
+                    }else if(!date){
+                        error("date","Date is Required");
+                    }
+                }
+            });

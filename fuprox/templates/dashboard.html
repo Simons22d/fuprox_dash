@@ -55,19 +55,19 @@
                 var doughnut = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ["New","Assigned","Resolved","Closed"],
+                        labels: ["Bookings","Assigned"],
                         datasets: [
                             {
                                 label: "Population (millions)",
-                                backgroundColor: ["Red","Orange","Yellow","Green"],
-                                data: [1,4,2,0]
+                                backgroundColor: ["Red","Green"],
+                                data: [1,4]
                             }
                         ]
                     },
                     options: {
                         title: {
                             display: true,
-                            text: 'Summary Of  Todays Bookings'
+                            text: 'Queue Status'
                         }
                     }
                 });
@@ -160,15 +160,13 @@
                 </select>
         </div>
             <div class="col-lg-3" >
-                    <label for="type">Issue Type</label>
+                    <label for="type">Kind</label>
                     <select class="form-control form-control-sm" id="type" name="type"  disabled>
                         <option id="statusOne" selected value="null">Issue Type</option>
-                        <option class="status" id="all" value="6">All Issues</option>
-                        <option class="status" id="new" value="0">New Issues</option>
-                        <option class="status" id="assigned" value="1">Assigned Issues</option>
-                        <option class="status" id="resolved" value="2">Resolved Issues</option>
-                        <option class="status" id="escalated" value="5">Escalated Issues</option>
-                        <option class="status" id="closed" value="3">Closed Issues</option>
+                        <option class="status" id="payment" value="6">Payments</option>
+                        <option class="status" id="booking" value="0">Booking</option>
+                        <option class="status" id="branch-country" value="1">Branch/Country</option>
+                        <option class="status" id="all" value="1">All</option>
                     </select>
             </div>
 
