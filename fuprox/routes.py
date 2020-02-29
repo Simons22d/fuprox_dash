@@ -3,7 +3,8 @@ from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
 from fuprox.models import User,Company,Branch, Service,Help
-from datetime import datetime 
+from datetime import datetime
+import secrets
 
 # rendering many route to the same template
 

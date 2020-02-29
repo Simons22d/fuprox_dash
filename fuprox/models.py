@@ -39,10 +39,11 @@ class Company(db.Model):
     def __repr__(self):
         return f"Company {self.name} -> {self.service}"
 
+
 # creating a branch class
 class Branch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(length=100))
+    name = db.Column(db.String(length=100),unique=True)
     company = db.Column(db.String(length=11))
     longitude = db.Column(db.String(length=50))
     latitude = db.Column(db.String(length=50))
@@ -50,7 +51,6 @@ class Branch(db.Model):
     closes = db.Column(db.String(length=50))
     service = db.Column(db.String(length=50))
     description = db.Column(db.String(length=50))
-
 
     def __init__(self, name, company, longitude, latitude,opens,closes,service,description):
         self.name = name
@@ -62,10 +62,12 @@ class Branch(db.Model):
         self.service = service
         self.description = description
 
+
 # creating branch Schema
 class BranchSchema(ma.Schema):
     class Meta:
         fields = ('id','name','company','address','longitude','latitude','opens','closes','service','description')
+
 
 # creating a user class
 # creating a company class
@@ -80,6 +82,7 @@ class Service(db.Model):
 
     def __repr__(self):
         return f"Company {self.name} -> {self.service}"
+
 
 class Help(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -112,6 +112,10 @@
             <small>Here you can enter data about the branches. These detail shall be used to interact with the rest of the system. Please make sure these data is accurate.</small>
             <br>
           </div>
+        <input class="form-control form-control-sm mb-5" id="searchPlace" list="searcher" name="seachPlace" placeholder="Enter Name e.g Equity bank" required="" type="text" value="">
+        <datalist id="searcher">
+        </datalist>
+
           <div class="row mb-1">
               <div class="col-lg-12">
                 {{ form.name.label(class='form-control-label') }}
@@ -278,7 +282,6 @@
     </div>
     <script src="{{ url_for('static',filename='js/maps.js') }}"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLa1ip_JY3cCbq9YU63nZjBKYE8RUcn88&callback=initMap"
-            async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLa1ip_JY3cCbq9YU63nZjBKYE8RUcn88&callback=initMap" async defer></script>
       <!-- end container -->
 {% endblock %}
