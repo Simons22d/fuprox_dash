@@ -98,6 +98,7 @@ class CompanyForm(FlaskForm):
 class ServiceForm(FlaskForm):
     name = StringField("Name",validators=[DataRequired()])
     service = StringField("Description",validators =[DataRequired()])
+    is_medical = RadioField('Medical', choices = [('True','Medical'),('False','Not Medical')])
     submit = SubmitField("Add Service")
 
 

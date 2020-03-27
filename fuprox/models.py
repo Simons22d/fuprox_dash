@@ -11,6 +11,8 @@ def load_user(user_id):
 # we are going to create the model from a user class
 # the user mixen adds certain fields that are required matain the use session
 # it will add certain fileds to the user class tha are essential to the user login
+
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(12), unique=True, nullable=False)
@@ -27,6 +29,8 @@ class User(db.Model, UserMixin):
         self.password = password
 
 # creating a company class
+
+
 class Company(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(length=50))
@@ -75,13 +79,12 @@ class Service(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(length=50))
     service = db.Column(db.String(length=250))
+    is_medical = db.Column(db.Boolean,default=False)
 
-    def __init__(self,name,service):
+    def __init__(self,name,service,is_medical):
         self.name = name
         self.service = service
-
-    def __repr__(self):
-        return f"Company {self.name} -> {self.service}"
+        self.is_medical = is_medical
 
 
 class Help(db.Model):

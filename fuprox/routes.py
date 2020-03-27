@@ -78,7 +78,12 @@ def add_category():
     company = ServiceForm()
     # checkinf the mentioed  comapany exists
     if company.validate_on_submit():
-        data = Service(company.name.data, company.service.data)
+        final = bool()
+        if company.is_medical.data == "True" :
+            final = True
+        else :
+            final = False
+        data = Service(company.name.data, company.service.data,final)
         db.session.add(data)
         db.session.commit()
         company.name.data = ""
@@ -99,7 +104,6 @@ def add_company():
         service_type  = Service.query.get(int(company.service.data))
         if service_type :
             data = Company(company.name.data, company.service.data)
-            print(company.name.data, company.service.data)
             db.session.add(data)
             db.session.commit()
             company.name.data = ""
