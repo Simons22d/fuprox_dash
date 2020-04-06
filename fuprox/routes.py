@@ -6,6 +6,7 @@ from fuprox.models import User,Company,Branch, Service,Help,BranchSchema
 from datetime import datetime
 import secrets
 import socketio
+from fuprox.utility import email
 
 sio = socketio.Client()
 socket_link = "http://127.0.0.1:5000/"
@@ -51,9 +52,23 @@ def branches():
                           branch.closes.data, branch.service.data, branch.email.data)
             db.session.add(data)
             db.session.commit()
-
+            data = branch_schema.dump(data)
             # here we are going to push  the branch data to the lacalhost
-            sio.emit("branch",branch_schema.dump(data))
+            sio.emit("branch",data)
+            # we are going to email the sender
+            if branch.email.data :
+                # we are going to email.
+                body = f"""
+                    Dear Sir/Madam, <br>
+                    Below please find the key to you branches.<br>
+                    This key is required for for the applications to <br>
+                    work for all the branches. Please do not loose this key. 
+                    <br><br>
+                    <pre>{data['key']}</pre>
+                    Kind Regards,<br> 
+                    IT Support.<br>
+                """
+                email("denniskiruku@gmail.com",f"Branch Key from Fuprox",body)
 
             branch.name.data = ""
             branch.company.data = ""
@@ -386,6 +401,13 @@ def edit_company(id):
     return render_template("edit_company.html", form=company, services=services)
 
 
+
+@app.route("/email",methods=["POST"])
+def send_email():
+    to = request.json["email"]
+    subject = request.json["subject"]
+    body = request.json["body"]
+    return email(to,subject,body)
 
 # edit company
 @app.route("/category/edit/<int:id>",methods=["GET","POST"])
