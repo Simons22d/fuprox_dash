@@ -85,10 +85,8 @@ class BranchForm(FlaskForm):
     company = StringField("Company Name",validators=[DataRequired()])
     opens = StringField("Time Opens",validators=[DataRequired()])
     closes = StringField("Time Closes",validators=[DataRequired()])
-    description = TextAreaField("Description")
+    email = StringField("Contact Email",validators=[DataRequired(),Email()])
     submit = SubmitField("Add Branch")
-
-
 
 class CompanyForm(FlaskForm):
     name = StringField("Name",validators=[DataRequired()])

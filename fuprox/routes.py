@@ -48,7 +48,7 @@ def branches():
         if this_company_data :
             data = Branch(branch.name.data, branch.company.data, branch.longitude.data, branch.latitude.data,
                           branch.opens.data,
-                          branch.closes.data, branch.service.data, branch.description.data)
+                          branch.closes.data, branch.service.data, branch.email.data)
             db.session.add(data)
             db.session.commit()
 
@@ -62,7 +62,7 @@ def branches():
             branch.opens.data = ""
             branch.closes.data = ""
             branch.service.data = ""
-            branch.description.data = ""
+            branch.email.data = ""
             flash(f"Branch Successfully Added", "success")
         else:
             flash("Company Does Not exist. Add copmany name first.","danger")
