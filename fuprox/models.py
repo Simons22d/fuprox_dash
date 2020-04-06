@@ -75,9 +75,8 @@ class Branch(db.Model):
 # creating branch Schema
 class BranchSchema(ma.Schema):
     class Meta:
-        fields = (
-        'id', 'name', 'company', 'address', 'longitude', 'latitude', 'opens', 'closes', 'service', 'description', \
-        "key_", "valid_tille")
+        fields = ('id', 'name', 'company', 'address', 'longitude', 'latitude', 'opens', 'closes', 'service',\
+                  'description',"key_", "valid_till")
 
 
 # creating a user class

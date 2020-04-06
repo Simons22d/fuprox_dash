@@ -8,6 +8,8 @@ import secrets
 import socketio
 
 sio = socketio.Client()
+socket_link = "http://127.0.0.1:5000/"
+
 
 # rendering many route to the same template
 branch_schema = BranchSchema()
@@ -306,6 +308,9 @@ def edit_branch(id):
         # update date to the database
         db.session.commit()
 
+        # here we are going to push  the branch data to the lacalhost
+        sio.emit("branch_edit", branch_schema.dump(branch_data))
+
         # prefilling the form with the empty fields
         branch.name.data = ""
         branch.company.data = ""
@@ -411,3 +416,10 @@ def edit_category(id):
     else:
         flash("Company Does Not exist. Add company name first.", "danger")
     return render_template("edit_category.html", form=service)
+
+'''working with sockets '''
+try:
+    sio.connect(socket_link)
+except socketio.exceptions.ConnectionError:
+    print("Error! Could not connect to the socket server.")
+    # print("...")
