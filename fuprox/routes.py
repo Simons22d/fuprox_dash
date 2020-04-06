@@ -2,11 +2,15 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
-from fuprox.models import User,Company,Branch, Service,Help
+from fuprox.models import User,Company,Branch, Service,Help,BranchSchema
 from datetime import datetime
 import secrets
+import socketio
+
+sio = socketio.Client()
 
 # rendering many route to the same template
+branch_schema = BranchSchema()
 
 @app.route("/")
 @app.route("/dashboard")
@@ -45,6 +49,10 @@ def branches():
                           branch.closes.data, branch.service.data, branch.description.data)
             db.session.add(data)
             db.session.commit()
+
+            # here we are going to push  the branch data to the lacalhost
+            sio.emit("branch",branch_schema.dump(data))
+
             branch.name.data = ""
             branch.company.data = ""
             branch.longitude.data = ""
@@ -79,7 +87,7 @@ def add_category():
     # checkinf the mentioed  comapany exists
     if company.validate_on_submit():
         final = bool()
-        if company.is_medical.data == "True" :
+        if company.is_medical.data == "True":
             final = True
         else :
             final = False
@@ -226,9 +234,7 @@ def add_users():
         user = User(username=register.username.data, email=register.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
-
         flash(f"Account Created successfully", "success")
-
     return render_template("add_users.html", form=register,data=user_data)
 
 

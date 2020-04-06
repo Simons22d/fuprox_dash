@@ -1,12 +1,14 @@
-from fuprox import db,ma,login_manager,app
+from fuprox import db, ma, login_manager, app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
+import secrets
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 # we are going to create the model from a user class
 # the user mixen adds certain fields that are required matain the use session
@@ -23,20 +25,21 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User (' {self.id} ',' {self.username} ', '{self.email}', '{self.image_file}' )"
 
-    def __init__(self,username,email,password):
+    def __init__(self, username, email, password):
         self.username = username
         self.email = email
         self.password = password
+
 
 # creating a company class
 
 
 class Company(db.Model):
-    id = db.Column(db.Integer,primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(length=50))
     service = db.Column(db.String(length=250))
 
-    def __init__(self,name,service):
+    def __init__(self, name, service):
         self.name = name
         self.service = service
 
@@ -47,16 +50,18 @@ class Company(db.Model):
 # creating a branch class
 class Branch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(length=100),unique=True)
-    company = db.Column(db.String(length=11))
+    name = db.Column(db.String(length=100))
+    company = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
     longitude = db.Column(db.String(length=50))
     latitude = db.Column(db.String(length=50))
     opens = db.Column(db.String(length=50))
     closes = db.Column(db.String(length=50))
-    service = db.Column(db.String(length=50))
+    service = db.Column(db.Integer, db.ForeignKey("service.id"))
     description = db.Column(db.String(length=50))
+    key_ = db.Column(db.Text, default=secrets.token_hex)
+    valid_till = db.Column(db.DateTime)
 
-    def __init__(self, name, company, longitude, latitude,opens,closes,service,description):
+    def __init__(self, name, company, longitude, latitude, opens, closes, service, description):
         self.name = name
         self.company = company
         self.longitude = longitude
@@ -70,18 +75,20 @@ class Branch(db.Model):
 # creating branch Schema
 class BranchSchema(ma.Schema):
     class Meta:
-        fields = ('id','name','company','address','longitude','latitude','opens','closes','service','description')
+        fields = (
+        'id', 'name', 'company', 'address', 'longitude', 'latitude', 'opens', 'closes', 'service', 'description', \
+        "key_", "valid_tille")
 
 
 # creating a user class
 # creating a company class
 class Service(db.Model):
-    id = db.Column(db.Integer,primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(length=50))
     service = db.Column(db.String(length=250))
-    is_medical = db.Column(db.Boolean,default=False)
+    is_medical = db.Column(db.Boolean, default=False)
 
-    def __init__(self,name,service,is_medical):
+    def __init__(self, name, service, is_medical):
         self.name = name
         self.service = service
         self.is_medical = is_medical

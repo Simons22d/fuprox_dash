@@ -89,6 +89,7 @@ class BranchForm(FlaskForm):
     submit = SubmitField("Add Branch")
 
 
+
 class CompanyForm(FlaskForm):
     name = StringField("Name",validators=[DataRequired()])
     service = StringField("Service Type",validators=[DataRequired()])
