@@ -111,6 +111,10 @@ def add_category():
         data = Service(company.name.data, company.service.data,final)
         db.session.add(data)
         db.session.commit()
+        # adding a category
+        sio.emit("category", data)
+
+
         company.name.data = ""
         company.service.data = ""
         flash(f"Service Successfully Added", "success")
@@ -131,6 +135,9 @@ def add_company():
             data = Company(company.name.data, company.service.data)
             db.session.add(data)
             db.session.commit()
+            # add company
+            sio.emit("company", data)
+
             company.name.data = ""
             company.service.data = ""
             flash(f"Company Successfully Added", "success")
