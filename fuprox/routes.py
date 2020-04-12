@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
-from fuprox.models import User,Company,Branch, Service,Help,BranchSchema
+from fuprox.models import User,Company,Branch, Service,Help,BranchSchema,CompanySchema,ServiceSchema
 from datetime import datetime
 import secrets
 import socketio
@@ -14,6 +14,8 @@ socket_link = "http://127.0.0.1:5000/"
 
 # rendering many route to the same template
 branch_schema = BranchSchema()
+service_schema = ServiceSchema()
+company_schema =CompanySchema()
 
 @app.route("/")
 @app.route("/dashboard")
@@ -112,7 +114,7 @@ def add_category():
         db.session.add(data)
         db.session.commit()
         # adding a category
-        sio.emit("category", data)
+        sio.emit("category",  service_schema.dump(data))
 
 
         company.name.data = ""
@@ -136,7 +138,7 @@ def add_company():
             db.session.add(data)
             db.session.commit()
             # add company
-            sio.emit("company", data)
+            sio.emit("company", company_schema.dump(data))
 
             company.name.data = ""
             company.service.data = ""

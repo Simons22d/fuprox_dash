@@ -36,7 +36,7 @@ class User(db.Model, UserMixin):
 
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(length=50))
+    name = db.Column(db.String(length=50),unique=True)
     service = db.Column(db.String(length=250))
 
     def __init__(self, name, service):
@@ -45,6 +45,11 @@ class Company(db.Model):
 
     def __repr__(self):
         return f"Company {self.name} -> {self.service}"
+
+
+class CompanySchema(ma.Schema):
+    class Meta:
+        fields = ("id","name","service")
 
 
 # creating a branch class
@@ -83,7 +88,7 @@ class BranchSchema(ma.Schema):
 # creating a company class
 class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(length=50))
+    name = db.Column(db.String(length=50),unique=True)
     service = db.Column(db.String(length=250))
     is_medical = db.Column(db.Boolean, default=False)
 
@@ -91,6 +96,11 @@ class Service(db.Model):
         self.name = name
         self.service = service
         self.is_medical = is_medical
+
+
+class ServiceSchema(ma.Schema):
+    class Meta:
+        fields = ("id","name","service","is_medical")
 
 
 class Help(db.Model):
