@@ -55,13 +55,13 @@ class CompanySchema(ma.Schema):
 # creating a branch class
 class Branch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(length=100))
+    name = db.Column(db.String(length=250))
     company = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
     longitude = db.Column(db.String(length=50))
     latitude = db.Column(db.String(length=50))
     opens = db.Column(db.String(length=50))
     closes = db.Column(db.String(length=50))
-    service = db.Column(db.Integer, db.ForeignKey("service.id"))
+    service = db.Column(db.String(length=100), db.ForeignKey("service.name"))
     description = db.Column(db.String(length=50))
     key_ = db.Column(db.Text, default=secrets.token_hex)
     valid_till = db.Column(db.DateTime)

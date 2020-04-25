@@ -15,6 +15,7 @@ socket_link = "http://127.0.0.1:5000/"
 # rendering many route to the same template
 branch_schema = BranchSchema()
 service_schema = ServiceSchema()
+services_schema = ServiceSchema(many=True)
 company_schema =CompanySchema()
 
 @app.route("/")
@@ -54,9 +55,9 @@ def branches():
                           branch.closes.data, branch.service.data, branch.email.data)
             db.session.add(data)
             db.session.commit()
-            data = branch_schema.dump(data)
+            data_ = branch_schema.dump(data)
             # here we are going to push  the branch data to the lacalhost
-            sio.emit("branch",data)
+            sio.emit("branch",data_)
             # we are going to email the sender
             if branch.email.data :
                 # we are going to email.
@@ -66,11 +67,11 @@ def branches():
                     This key is required for for the applications to <br>
                     work for all the branches. Please do not loose this key. 
                     <br><br>
-                    <pre>{data['key']}</pre>
+                    <pre>{data_["key_"]}</pre>
                     Kind Regards,<br> 
                     IT Support.<br>
                 """
-                email("denniskiruku@gmail.com",f"Branch Key from Fuprox",body)
+                # email("denniskiruku@gmail.com",f"Branch Key from Fuprox",body)
 
             branch.name.data = ""
             branch.company.data = ""
@@ -83,7 +84,6 @@ def branches():
             flash(f"Branch Successfully Added", "success")
         else:
             flash("Company Does Not exist. Add copmany name first.","danger")
-
     return render_template("add_branch.html",form=branch,companies = company_data,services=service_data)
 
 # view_branch

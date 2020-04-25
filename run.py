@@ -5,7 +5,8 @@ import eventlet.wsgi
 
 port = 3000
 if __name__ == "__main__":
-    eventlet.wsgi.server(eventlet.listen(('', port)), app)
+    app.run("0.0.0.0",port)
+    # eventlet.wsgi.server(eventlet.listen(('', port)), app)
 
 
 
