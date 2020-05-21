@@ -48,7 +48,7 @@ def branches():
     branch = BranchForm()
     if branch.validate_on_submit():
         # get specific compan data
-        this_company_data = Company.query.get(branch.company.data)
+        this_company_data = Company.query.filter_by(name=branch.company.data).first()
         if this_company_data :
             data = Branch(branch.name.data, branch.company.data, branch.longitude.data, branch.latitude.data,
                           branch.opens.data,
@@ -62,16 +62,119 @@ def branches():
             if branch.email.data :
                 # we are going to email.
                 body = f"""
-                    Dear Sir/Madam, <br>
-                    Below please find the key to you branches.<br>
-                    This key is required for for the applications to <br>
-                    work for all the branches. Please do not loose this key. 
-                    <br><br>
-                    <pre>{data_["key_"]}</pre>
-                    Kind Regards,<br> 
-                    IT Support.<br>
+                    <div marginheight="0" marginwidth="0" style="background:#fafafa;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;min-width:100%;padding:0;text-align:left;width:100%!important" bgcolor="#fafafa">
+                    <table style="background:#fafafa;border-collapse:collapse;border-spacing:0;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;height:100%;line-height:19px;margin:0;padding:10px;text-align:left;vertical-align:top;width:100%" bgcolor="#fafafa">
+                      <tbody><tr style="padding:0;text-align:left;vertical-align:top" align="left">
+                        <td align="center" valign="top" style="border-collapse:collapse!important;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:center;vertical-align:top;word-break:break-word">
+                          <center style="min-width:580px;width:100%">
+                
+                            <table style="border-collapse:collapse;border-spacing:0;margin:0 auto;padding:0;text-align:inherit;vertical-align:top;width:580px">
+                              <tbody><tr style="padding:0;text-align:left;vertical-align:top" align="left">
+                                <td style="border-collapse:collapse!important;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:left;vertical-align:top;word-break:break-word" align="left" valign="top">
+                
+                                  <table style="border-collapse:collapse;border-spacing:0;margin-top:20px;padding:0;text-align:left;vertical-align:top;width:100%">
+                                    <tbody><tr style="padding:0;text-align:left;vertical-align:top" align="left">
+                                      <td align="center" style="border-collapse:collapse!important;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:center;vertical-align:top;word-break:break-word" valign="top">
+                                        <center style="min-width:580px;width:100%">
+                                          <div style="margin-bottom:30px;margin-top:20px;text-align:center!important" align="center !important">
+                <!--                            <img src="https://drive.google.com/file/d/15a4HIX5Lhgwydm03V_GFVMkUT-vsBJRF/view?usp=sharing" width="50" height="48" style="clear:both;display:block;float:none;height:48px;margin:0 auto;max-height:48px;max-width:50px;outline:none;text-decoration:none;width:50px" align="none" class="CToWUd">-->
+                                          </div>
+                                        </center>
+                                      </td>
+                                      <td style="border-collapse:collapse!important;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:left;vertical-align:top;width:0px;word-break:break-word" align="left" valign="top"></td>
+                                    </tr>
+                                  </tbody></table>
+                
+                                  <table style="background:#ffffff;border-collapse:collapse;border-radius:3px!important;border-spacing:0;border:1px solid #dddddd;padding:0;text-align:left;vertical-align:top" bgcolor="#ffffff">
+                                    <tbody><tr style="padding:0;text-align:left;vertical-align:top" align="left">
+                                      <td style="border-collapse:collapse!important;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:left;vertical-align:top;word-break:break-word" align="left" valign="top">
+                
+                                        <div style="color:#333333;font-size:14px;font-weight:normal;line-height:20px;margin:20px">
+                <table style="background:#fff;border-collapse:separate!important;border-spacing:0;box-sizing:border-box;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;height:100%;line-height:19px;margin:0;padding:10px;text-align:left;vertical-align:top;width:100%" width="100%" bgcolor="#fff">
+                    <tbody><tr style="padding:0;text-align:left;vertical-align:top" align="left">
+                        <td style="border-collapse:collapse!important;box-sizing:border-box;color:#222222;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:left;vertical-align:top;word-break:break-word" valign="top" align="left"></td>
+                        <td style="border-collapse:collapse!important;box-sizing:border-box;color:#222222;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:14px;font-weight:normal;line-height:19px;margin:0 auto;max-width:580px;padding:24px;text-align:left;vertical-align:top;width:580px;word-break:break-word" width="580" valign="top" align="left">
+                            <div style="box-sizing:border-box;display:block;margin:0 auto;max-width:580px">
+                
+                
+                <table cellpadding="0" cellspacing="0" style="border-collapse:separate!important;border-spacing:0;box-sizing:border-box;margin:0 0 30px;padding:0;text-align:left;vertical-align:top;width:100%" width="100%">
+                  <tbody><tr style="padding:0;text-align:left;vertical-align:top" align="left">
+                    <td align="" style="border-collapse:collapse!important;box-sizing:border-box;color:#222222;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:left;vertical-align:top;word-break:break-word" valign="top">
+                      <table cellpadding="0" cellspacing="0" style="border-collapse:separate!important;border-spacing:0;box-sizing:border-box;padding:0;text-align:left;vertical-align:top;width:auto">
+                        <tbody><tr style="padding:0;text-align:left;vertical-align:top" align="left">
+                          <td style="background:#0366d6;border-collapse:collapse!important;border-radius:5px;box-sizing:border-box;color:#222222;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:center;vertical-align:top;word-break:break-word" valign="top" bgcolor="#0366d6" align="center">
+                          </td>
+                        </tr>
+                      </tbody></table>
+                    </td>
+                  </tr>
+                </tbody></table>
+                
+                <p style="color:#222222;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:14px;font-weight:normal;line-height:1.5;margin:0 0 15px;padding:0;text-align:left" align="left">
+                     Dear Sir/Madam, <br><br>
+                                    Please find the key below, this key is required forthe applications to
+                                    work for the branch <b> {branch.name.data}. </b>
+                                    <br>Please do not loose this key.
+                                    <br><br>
+                                    <pre>{data_["key_"]}</pre>
+                                    <br>
+                                    If your are not sure of how to use the key on the applications. <br><br>
+                                    Please Follow <a href='http://68.183.89.127:3000/help'>this</a>
+                                    link to get more infomation and other documents.<br><br>
+                
+                                    Kind Regards,<br>
+                                    IT Support.<br><br><br>
+                
+                </p>
+                <p
+                        style="color:#586069!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:12px!important;font-weight:normal;line-height:1.5;margin:0 0 15px;padding:0;text-align:left" align="left">You are receiving this email because a branch was added with your email on our platform.</p>
+                
+                
+                                <div style="box-sizing:border-box;clear:both;width:100%">
+                                    <hr style="background:#d9d9d9;border-style:solid none none;border-top-color:#e1e4e8;border-width:1px 0 0;color:#959da5;font-size:12px;height:0;line-height:18px;margin:24px 0 30px;overflow:visible">
+                              <div style="box-sizing:border-box;color:#959da5;font-size:12px;line-height:18px">
+                                <p style="color:#959da5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:12px;font-weight:normal;line-height:18px;margin:0 0 15px;padding:0;text-align:center" align="center">
+                                        </p>
+                              </div>
+                                </div>
+                            </div>
+                
+                        </td>
+                        <td style="border-collapse:collapse!important;box-sizing:border-box;color:#222222;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:left;vertical-align:top;word-break:break-word" valign="top" align="left"></td>
+                    </tr>
+                </tbody></table>
+                
+                
+                
+                
+                
+                                        </div>
+                
+                                      </td>
+                                    </tr>
+                                  </tbody></table>
+                
+                                  <table style="border-collapse:collapse;border-spacing:0;margin-bottom:30px;padding:0;text-align:left;vertical-align:top;width:100%">
+                                    <tbody><tr style="padding:0;text-align:left;vertical-align:top" align="left">
+                                      <td align="center" style="border-collapse:collapse!important;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:center;vertical-align:top;word-break:break-word" valign="top">
+                                      </td>
+                                      <td style="border-collapse:collapse!important;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:left;vertical-align:top;width:0px;word-break:break-word" align="left" valign="top"></td>
+                                    </tr>
+                                  </tbody></table>
+                
+                                </td>
+                              </tr>
+                            </tbody></table>
+                
+                          </center>
+                        </td>
+                      </tr>
+                    </tbody></table><div class="yj6qo"></div><div class="adL">
+                
+                  </div></div><div class="adL">
+                    
                 """
-                # email("denniskiruku@gmail.com",f"Branch Key from Fuprox",body)
+                email(branch.email.data,f"{branch.company.data} Branch Key from Fuprox",body)
 
             branch.name.data = ""
             branch.company.data = ""
@@ -83,7 +186,7 @@ def branches():
             branch.email.data = ""
             flash(f"Branch Successfully Added", "success")
         else:
-            flash("Company Does Not exist. Add copmany name first.","danger")
+            flash("Company Does Not exist. Add company name first.","danger")
     return render_template("add_branch.html",form=branch,companies = company_data,services=service_data)
 
 # view_branch
@@ -193,7 +296,6 @@ def login():
 
     #loading the form
     login = LoginForm()
-
     #checking the form data status
     if login.validate_on_submit():
         print("form_data",login.email.data,login.password.data)
@@ -357,7 +459,7 @@ def edit_branch(id):
         branch.description.data = branch_data.description
 
     else:
-        flash("Company Does Not exist. Add copmany name first.", "danger")
+        flash("Company Does Not exist. Add company name first.", "danger")
             
     return render_template("edit_branch.html", form=branch, companies=company_data, services=service_data)
 
@@ -405,7 +507,7 @@ def edit_company(id):
         
 
     else:
-        flash("Company Does Not exist. Add copmany name first.", "danger")
+        flash("Company Does Not exist. Add company name first.", "danger")
             
     return render_template("edit_company.html", form=company, services=services)
 

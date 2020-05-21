@@ -203,7 +203,7 @@
                 {% endif %}
                   <datalist id="companyName">
                     {% for d in companies %}
-                        <option value="{{d.id}}">{{ d.name }}</option>
+                        <option value="{{d.name}}">{{ d.name }}</option>
                     {% endfor %}
                 </datalist>
                 <small class="form-text text-muted"></small>
@@ -270,11 +270,6 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6">
-          [<span id="latclicked"></span>]
-          [<span id="longclicked"></span>]
-          <!-- [<span id="latmoved"></span>] -->
-          <!-- [<span id="longmoved"></span>] -->
-
         </div>
         <div class="col-lg-6">
         </div>

@@ -4,7 +4,7 @@ from email.mime.multipart import MIMEMultipart
 
 
 def email(_to, subject, body):
-    _from = "kirukuwambui@gmail.com"
+    _from = "admin@fuprox.com"
     message = MIMEMultipart("alternative")
     message["Subject"] = subject
     message["From"] = _from
@@ -16,10 +16,9 @@ def email(_to, subject, body):
     message.attach(part)
     # Create secure connection with server and send email
     context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(_from, "Stainly22d!?__")
+    with smtplib.SMTP_SSL("mail.fuprox.com", 465, context=context) as server:
+        server.login(_from, "Japanitoes")
         if server.sendmail(_from, _to, message.as_string()):
             return True
         else:
             return False
-

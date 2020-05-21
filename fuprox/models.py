@@ -56,7 +56,7 @@ class CompanySchema(ma.Schema):
 class Branch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(length=250))
-    company = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
+    company = db.Column(db.String(length=100), db.ForeignKey("company.name"), nullable=False)
     longitude = db.Column(db.String(length=50))
     latitude = db.Column(db.String(length=50))
     opens = db.Column(db.String(length=50))
