@@ -7,12 +7,10 @@ logging.basicConfig(filename="logger.log",level=logging.DEBUG)
 
 class User:
     username = "killer"
-
     def name(self,username):
         pass
 
     def getUser(self):
-        logging.info("Just Leanring logging Code in Python")
+        logging.info("Just Learning logging Code in Python")
 
-
-User().getUser()
+print(User.getUser())

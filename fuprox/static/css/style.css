@@ -2026,3 +2026,39 @@ footer .credits {
     padding-top:30px;
     border-radius: 15px;
 }
+
+.tables{
+  font-size:12px;
+}
+
+
+/*working on tags*/
+.tag-success{
+  border: 2px solid limegreen;
+  color : limegreen;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.tag-pending{
+  border: 2px solid dodgerblue;
+  color : dodgerblue;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.tag-error{
+    border: 2px solid red;
+    color : red;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+/*end working tags*/
+
+p,div{
+  font-size : 12px;
+}
+
+.btn-sm{
+  font-size:12px;
+}

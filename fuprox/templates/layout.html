@@ -83,5 +83,51 @@
           <!-- Template Main Javascript File -->
           <script src="{{ url_for('static',filename='js/main.js') }}"></script>
           <script src="{{ url_for('static',filename='js/utility.js') }}"></script>
+  <script>
+       // $('[data-toggle="tooltip"]').tooltip()
+      	// adding tooltip support
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
+        let url = window.location.origin;
+
+        $("#mpesa").on("click",()=>{
+	        window.location = (`${url}/payments`)
+        })
+        $("#card").on("click",()=>{
+            window.location = (`${url}/card`)
+        })
+        $("#reports").on("click",()=>{
+            window.location = (`${url}/reports`)
+        })
+      	// $(".moreInfo").on("click",(me)=>{
+      	//     let id = me.id
+        //     console.log(">>>>>>>>>>",id)
+        //     // window.location = `${url}/info/${id}`
+        // })
+      const info =(me)=>{
+          console.log(me.id)
+          let current_location = window.location.href;
+          sessionStorage.setItem("prev",current_location)
+          let id = me.id;
+          window.location = `${url}/info/${id}`
+      };
+
+      $('#back_payments').on("click",()=>{
+        let location = sessionStorage.getItem("prev");
+        window.location = location.length > 1 ? location : "http://localhost:3000/payments"
+      });
+
+      $("#generate_payments").on("click",()=>{
+          console.loge("generate mpesa reports")
+       });
+
+      $("#report_main").on("click",()=>{
+          console.log("single report")
+      });
+      $("#reverse_main").on("click",()=>{
+          console.log("reserve transaction")
+      })
+  </script>
 </body>
 </html>
