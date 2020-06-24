@@ -54,12 +54,10 @@
                     
                     if (data.length) {
                       container += `<div class="mt-2 col-lg-12" style="font-weight:bold;font-size:18px"><h5 class='' style="color:#09f;text-decoration:underline;">Search Results</h5></div>`
-                      
                       // parse th json data
-                      console.log(data)
                       data.forEach(item => {
                         container += `<div class="mt-2 col-lg-12" style="font-weight:bold;font-size:18px"> <a href="http://localhost:3000/help/solution/${item.id}"><u>
-                            <p style="color:#09f" ">${item.title} ?</p>
+                            <h5 style="color:#09f" ">${item.title} ?</h5>
                           </u></a></div>`
                       })
                     }else{
@@ -93,7 +91,7 @@
   <div class="row">
     {% for solution in data %}
     <div class=" mt-2 col-lg-12"><a href="{{ url_for('search',id=solution.id)}}"><u>
-          <p class="text-muted">{{ solution.title }} ?</p>
+          <h5 class="text-muted">{{ solution.title }} ?</h5>
         </u></a></div>
     {% endfor %}
   </div>

@@ -71,9 +71,10 @@ def branches():
         # get specific compan data
         this_company_data = Company.query.filter_by(name=branch.company.data).first()
         if this_company_data :
+            key_ = secrets.token_hex();
             data = Branch(branch.name.data, branch.company.data, branch.longitude.data, branch.latitude.data,
                           branch.opens.data,
-                          branch.closes.data, branch.service.data, branch.email.data)
+                          branch.closes.data, branch.service.data, branch.email.data,key_)
             if not branch_exits(branch.name.data):
                 data_ = branch_schema.dump(data)
                 # here we are going to push  the branch data to the lacalhost
@@ -137,7 +138,7 @@ def branches():
                                                  work for the branch <b> {branch.name.data}. </b>
                                                  <br>Please do not loose this key.
                                                  <br><br>
-                                                 <pre>{data_["key_"]}</pre>
+                                                 <pre></pre>
                                                  <br>
                                                  If your are not sure of how to use the key on the applications. <br><br>
                                                  Please Follow <a href='http://68.183.89.127:3000/help'>this</a>
@@ -196,7 +197,12 @@ def branches():
 
                              """
                 try:
-                    email((branch.email.data).strip(),"Branch Key from Fuprox",body)
+                    try:
+                        pass
+                    except socket.gaierror:
+                        pass
+                    # email((branch.email.data).strip(),"Branch Key from Fuprox",body)
+                    pass
                 except UnicodeEncodeError :
                     # warn about sending a email and offer a link to sending the email
                     print("Error! error Sending email")
@@ -258,8 +264,6 @@ def add_category():
         db.session.commit()
         # adding a category
         sio.emit("category",  service_schema.dump(data))
-
-
         company.name.data = ""
         company.service.data = ""
         flash(f"Service Successfully Added", "success")
@@ -312,7 +316,6 @@ def view_category():
 
 
 @app.route("/help",methods=["GET","POST"])
-@login_required
 def help():
     solution_data = Help.query.all()
     return render_template("help.html",data = solution_data)
@@ -418,7 +421,6 @@ def manage_users():
 
 # SEARCHING ROUTE
 @app.route("/help/solution/<int:id>",methods=["GET","POST"])
-@login_required
 def search(id):
     # get data from the database based on the data provided
     data = Help.query.get(id)

@@ -48,36 +48,51 @@
 <!--    desktop application link -->
     <div class="row">
         <h5 class="text-muted "><u>Download Applications.</u></h5>
-        <div class="row mt-2">
+        <div class="row col-lg-12 mt-2">
             <div class="col-lg-4">
 <!--                desktop application-->
-            <div class="icon">
-            <img src="{{url_for('static',filename='images/personal-computer.svg')}}" alt="Desktop app" height="100px">
+            <div class="icon mt-2">
+            <img src="{{url_for('static',filename='images/personal-computer.svg')}}" alt="Desktop app" height="80px">
             </div>
-            <h5 class="text-muted text-small">Desktop Application.</h5>
+            <h5 class="text-muted text-small mt-2"> Applications.</h5>
 
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At impedit incidunt iste nobis, quidem temporibus ullam veritatis voluptatem? Dolorem, ipsam?</div>
+            <div class="mt-2">Download dekstop and the mobile application from the link below. The latest of the
+                available
+                apps
+            will be provided below.</div>
             <div>
-            <button class="btn-sm btn-primary mt-3">Dowload Desktop application</button></div>
-            </div>
-            <div class="col-lg-4">
-<!--                mobile application-->
-                <div class="icon mb-4 mt-2">
-                  <img src="{{url_for('static',filename='images/android.svg')}}" alt="Desktop app" height="60px">    
-                </div>
-                <h5 class="text-muted">Mobile Application.</h5>
 
-                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At impedit incidunt iste nobis, quidem temporibus ullam veritatis voluptatem? Dolorem, ipsam?</div>
-                <div>
-                <button class="btn-sm btn-primary mt-3 ">Dowload Mobile Application</button></div>
+            <div class="btn-group mt-4" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Download App Below
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  <button class="dropdown-item btn-sm " href="#">Desktop Teller App</button>
+                  <button class="dropdown-item btn-sm " href="#">Desktop Display App</button>
+                  <button class="dropdown-item btn-sm " href="#">Desktop Book  App</button>
+                  <button class="dropdown-item btn-sm " href="#">Mobile App </button>
+                </div>
             </div>
+            </div>
+<!--            <div class="col-lg-4">-->
+<!--&lt;!&ndash;                mobile application&ndash;&gt;-->
+<!--                <div class="icon mb-4 mt-2">-->
+<!--                  <img src="{{url_for('static',filename='images/android.svg')}}" alt="Desktop app" height="60px">    -->
+<!--                </div>-->
+<!--                <h5 class="text-muted">Mobile Application.</h5>-->
+
+<!--                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At impedit incidunt iste nobis, quidem temporibus ullam veritatis voluptatem? Dolorem, ipsam?</div>-->
+<!--                <div>-->
+<!--                <button class="btn-sm btn-primary mt-3 ">Dowload Mobile Application</button></div>-->
+<!--            </div>-->
         </div>
     </div>
 
 <!--    more info about a div-->
     <div class="row mt-5 mb-5">
-        <h5 class="text-muted mt-5 mb-3"><u>Manage Users.</u></h5>
-        <div class="row mt-2">
+        <h5 class="text-muted mt-2 mb-3"><u>Manage Users.</u></h5><br>
+        <div class="row  col-lg-12 mt-1">
             <div class="col-lg-4">
 <!--                desktop application-->
             <div class="icon mb-3 mt-3">
@@ -85,9 +100,11 @@
             </div>
             <h5 class="text-muted text-small">Add users.</h5>
 
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At impedit incidunt iste nobis, quidem temporibus ullam veritatis voluptatem? Dolorem, ipsam?</div>
+            <div>Add and manage user information. These users will be able to login to the backend.</div>
             <div>
-                <a href="{{url_for('add_users')}}"><button class="btn-sm btn-primary  mt-3">Add Users</button></a>
+                <a
+                        href="{{url_for('add_users')}}"><button class="btn-sm btn-primary btn col-lg-3 mt-3">Add
+                    Users</button></a>
             </div>
             </div>
             <div class="col-lg-6">
@@ -97,9 +114,10 @@
                 </div>
                 <h5 class="text-muted">Add Solution.</h5>
 
-                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At impedit incidunt iste nobis, quidem temporibus ullam veritatis voluptatem? Dolorem, ipsam?</div>
+                <div>Add a solution to a common problem here. The solutions will be visible to you clients.</div>
                 <div>
-                    <a href="{{url_for('add_solution')}}"><button class="btn-sm btn-primary  mt-3">Add Users</button></a>
+                    <a href="{{url_for('add_solution')}}"><button class="btn-sm btn  col-lg-2 btn-primary  mt-3">Add
+                        Users</button></a>
                 </div>
             </div>
         </div>
