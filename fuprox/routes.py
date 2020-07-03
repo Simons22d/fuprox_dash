@@ -2,7 +2,10 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
-from fuprox.models import User,Company,Branch, Service,Help,BranchSchema,CompanySchema,ServiceSchema
+from fuprox.models import User,Company,Branch, Service,Help,BranchSchema,CompanySchema,ServiceSchema,Mpesa, MpesaSchema
+from fuprox.utility import reverse
+
+
 from datetime import datetime
 import secrets
 import socketio
@@ -18,6 +21,9 @@ branch_schema = BranchSchema()
 service_schema = ServiceSchema()
 services_schema = ServiceSchema(many=True)
 company_schema =CompanySchema()
+mpesa_schema = MpesaSchema()
+mpesas_schema = MpesaSchema(many=True)
+
 
 
 
@@ -42,14 +48,51 @@ def home():
 @login_required
 def payments():
     # work on the payments templates
-    return render_template("payment.html")
+    # get date from the database 
+    lookup = Mpesa.query.all()
+    data = mpesas_schema.dump(lookup)
+    print("mpesa",data)
+    return render_template("payment.html",transactions=data)
+
+
+@app.route("/reverse",methods=["POST"])
+def reverse_():
+    """ PARAMS
+    'Initiator' => 'testapi',
+    'SecurityCredential' => 'eOvenyT2edoSzs5ATD0qQzLj/vVEIAZAIvIH8IdXWoab0NTP0b8xpqs64abjJmM8+cjtTOfcEsKfXUYTmsCKp5X3iToMc5xTMQv3qvM7nxtC/SXVk+aDyNEh3NJmy+Bymyr5ISzlGBV7lgC0JbYW1TWFoz9PIkdS4aQjyXnKA2ui46hzI3fevU4HYfvCCus/9Lhz4p3wiQtKJFjHW8rIRZGUeKSBFwUkILLNsn1HXTLq7cgdb28pQ4iu0EpVAWxH5m3URfEh4m8+gv1s6rP5B1RXn28U3ra59cvJgbqHZ7mFW1GRyNLHUlN/5r+Zco5ux6yAyzBk+dPjUjrbF187tg==',
+    'CommandID' => 'TransactionReversal',
+    'TransactionID' => 'NGE51H9MBP',
+    'Amount' => '800',
+    'ReceiverParty' => '600211',
+    'RecieverIdentifierType' => '11',
+    'ResultURL' => 'http://7ee727a4.ngrok.io/reversal/response.php',
+    'QueueTimeOutURL' => 'http://7ee727a4.ngrok.io/reversal/response.php',
+    'Remarks' => 'ACT_001',
+    'Occasion' => 'Reverse_Cash'
+    """
+    id = request.json["id"]
+    data = get_transaction(id)
+    transaction_id = data["receipt_number"]
+    amount = data["amount"]
+    receiver_party = data["phone_number"]
+    return reverse(transaction_id,amount,receiver_party)
+
+def get_transaction(id): 
+    lookup = Mpesa.query.get(id)
+    return mpesa_schema.dump(lookup)
+
 
 
 @app.route("/card")
 @login_required
 def payments_card():
+    # get date from the database 
+    lookup = Mpesa.query.all()
+    data = mpesas_schema.dump(lookup)
+    print("><>>>>>XX>>XXXXX")
+    print("mpesa",data)
     # work on the payments templates
-    return render_template("payment_card.html")
+    return render_template("payment_card.html", transactions=data)
 
 
 @app.route("/reports")
@@ -233,8 +276,10 @@ def branch_exits(name):
 # mpesa more info
 @app.route("/info/<string:key>")
 def more_info(key):
-
-    return render_template("info.html")
+    print("key",key)
+    lookup = Mpesa.query.get(key)
+    data = mpesa_schema.dump(lookup)
+    return render_template("info.html",data=data)
 
 
 # view_branch

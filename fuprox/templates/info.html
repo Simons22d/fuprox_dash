@@ -53,65 +53,59 @@
          <div class="col-lg-10">
           <div class="row">
             <div class="col-lg-2">Identifier : </div>
-            <div class="col-lg-8" id="identifier">Lorem ipsum.</div>
+            <div class="col-lg-8" id="identifier">{{ data.receipt_number }}</div>
           </div>
-
            <div class="row mt-2">
              <div class="col-lg-2" >Date Requested : </div>
-             <div class="col-lg-8" id="date "></div>
+             <div class="col-lg-8" id="date "> {{ data.date_added }}</div>
            </div>
 
            <div class="row mt-2">
              <div  class="col-lg-2"  >Amount : </div>
-             <div  class="col-lg-8"  id="Amount"></div>
+             <div  class="col-lg-8"  id="Amount"> {{ data.amount }} </div>
            </div>
 
            <div class="row mt-2">
              <div  class="col-lg-2"  >Status : </div>
-             <div  class="col-lg-8"  id="status"></div>
+             <div  class="col-lg-8"  id="status">{% if data.result_code == 0%}<td><span class="tag-success">Success</span></td>  {% else %} <td><span class="tag-error">Error</span></td> {% endif %}</div>
            </div>
 
            <div class="row mt-2">
              <div  class="col-lg-2"  >From : </div>
-             <div  class="col-lg-8"  id="from"></div>
+             <div  class="col-lg-8"  id="from">{{ data.phone_number }}</div>
            </div>
 
            <div class="row mt-2">
              <div  class="col-lg-2"  >To : </div>
-             <div  class="col-lg-8"  id="to"></div>
+             <div  class="col-lg-8"  id="to">{{ data.merchant_request_id }}</div>
            </div>
 
            <div class="row mt-2">
              <div  class="col-lg-2"  >Date Completed : </div>
-             <div  class="col-lg-8"  id="date_completed"></div>
+             <div  class="col-lg-8"  id="date_completed">{{ data.transaction_date }}</div>
            </div>
-
-          <div class="row mt-2">
-           <div  class="col-lg-2"  >Reversed : </div>
-           <div  class="col-lg-8"  id="reversed"></div>
-         </div>
-
          </div>
 
       </div>
+
+      {% if data.result_code == 0%}
       <div class="col-lg-12 row">
         <div class="col-lg-10">
-          <h5 class="text-muted mb-2 mt-4">Actions</h5>
-          <small class="mb-2 col-lg-5 row ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, dignissimos
-            exercitationem
-            iste
-            magnam provident sequi sint ullam. Eius, placeat repellat.</small>
+          <h5 class="text-muted mb-2 mt-5">Actions</h5>
+          <!-- <small class="mb-2 col-lg-5 row ">.</small> -->
 
         </div>
       </div>
       <div class="row col-lg-8 mt-4">
         <div class="col-lg-3">
-          <button id="reverse_main" class="btn btn-sm btn-outline-danger col-lg-12 mb-4">Reverse Transaction</button>
+          <button id={{data.id}} class="btn btn-sm btn-outline-danger col-lg-12 mb-4">Reverse Transaction</button>
         </div>
-        <div class="col-lg-3">
+        <!-- <div class="col-lg-3">
           <button id="report_main" class="btn btn-sm btn-outline-secondary col-lg-12">Transaction Report</button>
-        </div>
+        </div> -->
       </div>
+      {% else %}
+      {% endif %}
     </div>
   </section>
 {% endblock%}

@@ -66,11 +66,33 @@
             <th scope="col">Amount</th>
             <th scope="col">Date Requested</th>
             <th scope="col">Date Finalized</th>
-            <th scope="col" colspan="3">Action</th>
+            <th scope="col" colspan="2">Actions</th>
         </tr>
         </thead>
         <tbody id="adminTableBody">
-           <tr>
+          <!-- {{ transactions }} -->
+
+          {% for item in transactions%}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.receipt_number }}</td>
+            <td>{{ item.phone_number }}</td>
+            <td>{{ item.transaction_date }}</td>
+            {% if item.result_code == 0 %}
+              <td><span class="tag-success">Success</span></td>              
+            {% else %}
+              <td><span class="tag-error">Error</span></td>
+            {% endif %}
+            <td>{{ item.amount }}</td>
+            <td>{{ item.merchant_request_id }}</td>
+            <td>{{ item.date_added}}</td>
+            <td><img height="18px" src="../static/images/undo.svg" alt="Reverse" data-toggle="tooltip"
+                     data-placement="top" title="Reverse Transaction"></td>
+            <td><img onclick="info(this)" height="18px" src="../static/images/info.svg" alt="More Info" data-toggle="tooltip"
+                     data-placement="top" title="More info" id="{{item.id}}"></td>
+           </tr>
+          {% endfor %}
+           <!-- <tr>
             <td>1</td>
             <td>NQ32FG453</td>
             <td>0719573310</td>
@@ -79,11 +101,9 @@
             <td>ksh.40</td>
             <td>24/02 08:43:20</td>
             <td>24/02 08:43:50</td>
-                 <td><img src="../static/images/eye.svg" alt="Transaction Status" data-toggle="tooltip"
-                     data-placement="top" title="Transaction Status"></td>
-            <td><img src="../static/images/undo.svg" alt="Reverse" data-toggle="tooltip"
+            <td><img height="18px" src="../static/images/undo.svg" alt="Reverse" data-toggle="tooltip"
                      data-placement="top" title="Reverse Transaction"></td>
-            <td><img src="../static/images/info.svg" alt="More Info" data-toggle="tooltip"
+            <td><img height="18px" src="../static/images/info.svg" alt="More Info" data-toggle="tooltip"
                      data-placement="top" title="More info"></td>
            </tr>
            <tr>
@@ -95,17 +115,15 @@
                 <td>ksh.40</td>
                 <td>24/02 08:43:20</td>
                 <td>24/02 08:43:50</td>
-                 <td><img src="../static/images/eye.svg" alt="Transaction Status" data-toggle="tooltip"
-                     data-placement="top" title="Transaction Status"></td>
-            <td><img src="../static/images/undo.svg" alt="Reverse" data-toggle="tooltip"
+            <td><img height="18px" src="../static/images/undo.svg" alt="Reverse" data-toggle="tooltip"
                      data-placement="top" title="Reverse Transaction"></td>
-              <td onclick="info(this)"  id="OFT67453F" ><img class="moreInfo" src="../static/images/info.svg"
+              <td onclick="info(this)"  id="OFT67453F" ><img height="18px" class="moreInfo" src="../static/images/info.svg"
                      alt="More Info"
                      data-toggle="tooltip"
                      data-placement="top" title="More info"></td>
-           </tr>
-           <tr>
-                <td>3</td>
+           </tr> -->
+           <!-- <tr>
+                <td>1</td>
                 <td>NQ32FG453</td>
                 <td>0719573310</td>
                 <td>671234</td>
@@ -113,15 +131,13 @@
                 <td>ksh.40</td>
                 <td>24/02 08:43:20</td>
                 <td>24/02 08:43:50</td>
-                 <td><img src="../static/images/eye.svg" alt="Transaction Status" data-toggle="tooltip"
-                     data-placement="top" title="Transaction Status"></td>
-            <td><img src="../static/images/undo.svg" alt="Reverse" data-toggle="tooltip"
+            <td><img height="18px" src="../static/images/undo.svg" alt="Reverse" data-toggle="tooltip"
                      data-placement="top" title="Reverse Transaction"></td>
-            <td><img class="moreInfo" onclick="info(this)" id="fere222121" src="../static/images/info.svg"
+            <td><img height="18px" class="moreInfo" onclick="info(this)" id="fere222121" src="../static/images/info.svg"
                      alt="More Info"
                      data-toggle="tooltip"
                      data-placement="top" title="More info"></td>
-           </tr>
+           </tr> -->
 <!--            working  with the actions-->
 
 

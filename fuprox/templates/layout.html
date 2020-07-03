@@ -105,13 +105,17 @@
         //     console.log(">>>>>>>>>>",id)
         //     // window.location = `${url}/info/${id}`
         // })
-      const info =(me)=>{
-          console.log(me.id)
-          let current_location = window.location.href;
-          sessionStorage.setItem("prev",current_location)
-          let id = me.id;
-          window.location = `${url}/info/${id}`
-      };
+      
+      
+        const info =(me)=>{
+            console.log(me.id)
+            let current_location = window.location.href;
+            sessionStorage.setItem("prev",current_location)
+            let id = me.id;
+            window.location = `${url}/info/${id}`
+        };
+
+
 
       $('#back_payments').on("click",()=>{
         let location = sessionStorage.getItem("prev");
