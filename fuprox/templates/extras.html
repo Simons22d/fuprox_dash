@@ -61,20 +61,27 @@
                 apps
             will be provided below.</div>
             <div>
+            <div id="status_message"></div>
 
             <div class="btn-group mt-4" role="group">
-                <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Download App Below
-                </button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                  <button class="dropdown-item btn-sm " href="#">Desktop Teller App</button>
-                  <button class="dropdown-item btn-sm " href="#">Desktop Display App</button>
-                  <button class="dropdown-item btn-sm " href="#">Desktop Book  App</button>
-                  <button class="dropdown-item btn-sm " href="#">Mobile App </button>
-                </div>
+                <select  class="form-control form-control-sm mr-3" id="application">
+                <option class="dropdown-item btn-sm " id="1001" value="1001">Desktop Teller App</option>
+                <option class="dropdown-item btn-sm " id="1002" value="1002">Desktop Display App</option>
+                <option class="dropdown-item btn-sm " id="1003" value="1003">Desktop Book  App</option>
+                <option class="dropdown-item btn-sm " id="1004" value="1004">Mobile App </option>
+                </select>
             </div>
-            </div>
+            
+            <div class="btn-group mt-4" role="group">
+              <select class="form-control form-control-sm" id="platform">
+                <option class="dropdown-item btn-sm " id="2001" value="2001">Windows x64</option>
+                <option class="dropdown-item btn-sm " id="2002" value="2002">Mac x64</option>
+                <option class="dropdown-item btn-sm " id="2003" value="2003">Linux</option>
+              </select>
+          </div>
+          <br><br>
+          <a  target="_blank" class="btn btn-primary btn-sm col-lg-6" id="download_apps">Download</a>
+          </div>
 <!--            <div class="col-lg-4">-->
 <!--&lt;!&ndash;                mobile application&ndash;&gt;-->
 <!--                <div class="icon mb-4 mt-2">-->

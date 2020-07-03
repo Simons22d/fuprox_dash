@@ -132,6 +132,69 @@
       $("#reverse_main").on("click",()=>{
           console.log("reserve transaction")
       })
+
+      $("#download_apps").on("click",(e)=>{
+          let application = Number($("#application").val())
+          let platform = Number($("#platform").val())
+
+          if(application == 1004){
+            // android
+            message = "Android App"
+            link = "android_app"
+          }else if(application === 1001){
+            // teller
+            if(platform === 2001){
+              // windows
+            message = "Windows Teller App"
+            link = "teller_windows"
+            }else if(platform === 2002){
+              // mac
+             link = "teller_windows"
+             message = "Mac Teller App"
+            }else if(platform === 2003){
+              // linux
+              link = "teller_linux"
+              message = "Linux Teller App"
+            }
+          }else if(application === 1002){
+              // display
+              if(platform === 2001){
+                // windows
+                link = "display_windows"
+                message = "Windows Display App"
+              }else if(platform === 2002){
+                // mac
+                link = "display_mac"
+                message = "Mac Display App"
+              }else if(platform === 2003){
+                // linux
+                link = "display_linux"
+                message = "Linux Display App"
+              }
+          }else if(application === 1003){
+              // book
+              if(platform === 2001){
+                // windows
+                link = "book_windows"
+                message = "Windows Book App"
+              }else if(platform === 2002){
+                // mac
+                link = "book_mac"
+                message = "Mac Book App"
+              }else if(platform === 2003){
+                // linux
+                link = "book_linux"
+                message = "Linux Book App"
+              }
+          }
+          let msg = `<div class="alert alert-info col-lg-12 mt-2" role="alert" id="generating">Success! Downloading ${message} </div>`
+          
+          final_link = `http://68.183.89.127:4000/${link}.zip`
+          $("#download_apps").attr("href",final_link)
+          if($("#download_apps").attr("href")){
+            window.location.href = final_link
+          }
+      })
   </script>
 </body>
 </html>
