@@ -1,8 +1,8 @@
-from flask import render_template, url_for, flash, redirect, request, abort
+from flask import render_template, url_for, flash, redirect, request, abort,jsonify
 from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
-from fuprox.models import User,Company,Branch, Service,Help,BranchSchema,CompanySchema,ServiceSchema,Mpesa, MpesaSchema
+from fuprox.models import User,Company,Branch, Service,Help,BranchSchema,CompanySchema,ServiceSchema,Mpesa, MpesaSchema,Booking,BookingSchema
 from fuprox.utility import reverse
 
 
@@ -23,6 +23,7 @@ services_schema = ServiceSchema(many=True)
 company_schema =CompanySchema()
 mpesa_schema = MpesaSchema()
 mpesas_schema = MpesaSchema(many=True)
+bookings_schema = BookingSchema(many=True)
 
 
 
@@ -37,6 +38,26 @@ def home():
     # report = ReportForm()
     # rendering template
     return render_template("dashboard.html",today=date)
+
+
+@app.route("/doughnut/data",methods=["GET"])
+def _doughnut_data():
+    open_lookup = Booking.query.filter_by(serviced=False).all()
+    open_data = bookings_schema.dump(open_lookup)
+    closed_lookup = Booking.query.filter_by(serviced=True).all()
+    closed_data = bookings_schema.dump(closed_lookup)
+
+    return jsonify({"open":len(open_data),"closed":len(closed_data)})
+
+@app.route("/bar/data",methods=["POST"])
+def last_fifteen_data():
+    open_lookup = Booking.query.filter_by(serviced=False).all()
+    open_data = bookings_schema.dump(open_lookup)
+    closed_lookup = Booking.query.filter_by(serviced=True).all()
+    closed_data = bookings_schema.dump(closed_lookup)
+
+    return jsonify({"open":open_data,"closed":closed_data})
+
 
 """
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

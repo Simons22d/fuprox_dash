@@ -141,3 +141,44 @@ class MpesaSchema(ma.Schema):
     class Meta:
         fields = ("id", "amount", "receipt_number", "transaction_date", "phone_number", "checkout_request_id",
                   "merchant_request_id", "result_code", "result_desc", "date_added", "local_transactional_key")
+
+
+
+# creating a booking ID
+class Booking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    service_name = db.Column(db.String(length=250), nullable=True)
+    start = db.Column(db.String(length=200))
+    branch_id = db.Column(db.Integer)
+    ticket = db.Column(db.String(length=6), nullable=False)
+    date_added = db.Column(db.DateTime, default=datetime.now, unique=True)
+    active = db.Column(db.Boolean, default=False, nullable=False)
+    nxt = db.Column(db.Integer, nullable=False, default=1001)
+    serviced = db.Column(db.Boolean, nullable=False, default=False)
+    teller = db.Column(db.String(200), nullable=False, default=000000)
+    kind = db.Column(db.Integer, nullable=False)
+    user = db.Column(db.Integer)
+    is_instant = db.Column(db.Boolean, default=False)
+    forwarded = db.Column(db.Boolean, default=False)
+
+    def __init__(self, service_name, start, branch_id, ticket, active, nxt, serviced, teller, kind, user,
+                 instant, fowarded):
+        self.service_name = service_name
+        self.start = start
+        self.branch_id = branch_id
+        self.ticket = ticket
+        self.active = active
+        self.nxt = nxt
+        self.serviced = serviced
+        self.teller = teller
+        self.kind = kind
+        self.user = user
+        self.is_instant = instant
+        self.forwarded = fowarded
+        self.nxt = 1001
+
+
+class BookingSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "service_name", "start", "branch_id", "ticket", "active", "next", "serviced", "teller", \
+                  "kind", "user", "is_instant", "forwarded", "")

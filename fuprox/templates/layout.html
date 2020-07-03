@@ -115,8 +115,6 @@
             window.location = `${url}/info/${id}`
         };
 
-
-
       $('#back_payments').on("click",()=>{
         let location = sessionStorage.getItem("prev");
         window.location = location.length > 1 ? location : "http://localhost:3000/payments"
