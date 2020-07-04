@@ -308,9 +308,11 @@ const getData = (url,method,data,handleData) => {
     });
 }
 
-getData("http://localhost:3000/doughnut/data","GET",{},(data)=>{
-    console.log(data)
-    doughnut.data.datasets[0].data[0] =  data.open;
-    doughnut.data.datasets[0].data[1] =  data.closed;
-    doughnut.update();
-})
+setInterval(()=>{
+    getData("http://localhost:3000/doughnut/data","GET",{},(data)=>{
+        console.log(data)
+        doughnut.data.datasets[0].data[0] =  data.open;
+        doughnut.data.datasets[0].data[1] =  data.closed;
+        doughnut.update();
+    })
+},1000)
