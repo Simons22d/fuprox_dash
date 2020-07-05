@@ -56,10 +56,10 @@
                     type: 'doughnut',
 
                     data: {
-                        labels: ["Open ","Closed"],
+                        labels: ["Open","Serviced"],
                         datasets: [
                             {
-                                label: "Population (millions)",
+                                label: "Customers",
                                 backgroundColor: ["Red","Green"],
                                 data: [20,10]
                             }
@@ -84,7 +84,7 @@
                     labels: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
                     datasets: [{
                         steppedLine : "after",
-                        label:"Requests Serviced",
+                        label:"Tickets Serviced",
                         data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -108,7 +108,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: 'Task Lists for The Last 15 Days'
+                        text: 'Tickets list for The Last 15 Days (Per Day)'
                     },
                     scales: {
                         yAxes: [{
