@@ -1,6 +1,6 @@
 from flask import Flask,request,jsonify
 from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy,sqlalchemy
 from flask_mail import Mail
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
@@ -8,10 +8,14 @@ from flask_login import LoginManager
 app = Flask(__name__)
 app.config["SECRET_KEY"] = 'ae98b899c219ea14930e01ecaafd451090f4276f6e3c20481d92d240acb35d47'
 # basedir  = os.path.abspath(os.path.dirname(__file__))
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root:japanitoes@localhost:3306/fuprox"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root:@localhost:3306/fuprox"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
+try:
+    db = SQLAlchemy(app)
+except sqlalchemy.exc.ProgrammingError as e:
+    print("error",e)
+
 ma = Marshmallow(app)
 
 # init bcrypt

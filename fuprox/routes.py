@@ -49,15 +49,22 @@ def _doughnut_data():
 
     return jsonify({"open":len(open_data),"closed":len(closed_data)})
 
-@app.route("/bar/data",methods=["POST"])
+@app.route("/bar/data",methods=["GET"])
 def last_fifteen_data():
-    open_lookup = Booking.query.filter_by(serviced=False).all()
-    open_data = bookings_schema.dump(open_lookup)
-    closed_lookup = Booking.query.filter_by(serviced=True).all()
-    closed_data = bookings_schema.dump(closed_lookup)
+    data = get_issue_count()
+    return jsonify(data["result"])
 
-    return jsonify({"open":open_data,"closed":closed_data})
 
+
+
+"""
+function to get issue count >>>>
+"""
+
+def get_issue_count():
+    data = db.session.execute("SELECT COUNT(*) AS issuesCount, DATE (date_added) AS issueDate FROM booking GROUP BY "
+                           "issueDate LIMIT 15")
+    return {'result': [dict(row) for row in data]}
 
 """
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -325,9 +332,12 @@ def add_category():
             final = True
         else :
             final = False
-        data = Service(company.name.data, company.service.data,final)
-        db.session.add(data)
-        db.session.commit()
+        try:
+            data = Service(company.name.data, company.service.data,final)
+            db.session.add(data)
+            db.session.commit()
+        except sqlalchemy.exc.IntegrityError:
+            flash(f"Category By That Name Exists","warning")
         # adding a category
         sio.emit("category",  service_schema.dump(data))
         company.name.data = ""
@@ -347,9 +357,13 @@ def add_company():
         # getting if the company type exists within the service types
         service_type  = Service.query.get(int(company.service.data))
         if service_type :
-            data = Company(company.name.data, company.service.data)
-            db.session.add(data)
-            db.session.commit()
+
+            try:
+                data = Company(company.name.data, company.service.data)
+                db.session.add(data)
+                db.session.commit()
+            except sqlalchemy.exc.IntegrityError:
+                flash("Company By That Name Exists","warning")
             # add company
             sio.emit("company", company_schema.dump(data))
 
@@ -431,10 +445,12 @@ def register():
         # hashing the password
         hashed_password = bcrypt.generate_password_hash(register.password.data).decode("utf-8")
         # adding the password to the database
-        user = User(username=register.username.data, email=register.email.data, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-
+        try:
+            user = User(username=register.username.data, email=register.email.data, password=hashed_password)
+            db.session.add(user)
+            db.session.commit()
+        except sqlalchemy.exc.IntegrityError:
+            flash("User By That Username Exists","warning")
         flash(f"Account Created successfully", "success")
         return redirect(url_for('login'))
     return render_template("register.html", form=register)
@@ -466,9 +482,12 @@ def add_users():
         # hashing the password
         hashed_password = bcrypt.generate_password_hash(register.password.data).decode("utf-8")
         # adding the password to the database
-        user = User(username=register.username.data, email=register.email.data, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
+        try:
+            user = User(username=register.username.data, email=register.email.data, password=hashed_password)
+            db.session.add(user)
+            db.session.commit()
+        except sqlalchemy.exc.IntegrityError:
+            flash("User By That Name Exists","warning")
         flash(f"Account Created successfully", "success")
     return render_template("add_users.html", form=register,data=user_data)
 
@@ -507,6 +526,7 @@ def add_solution():
         solution_data = Help(topic,title,sol)
         db.session.add(solution_data)
         db.session.commit()
+
         flash("Solution Added Successfully","success")
 
         # render a html && add the data to the page
@@ -527,18 +547,21 @@ def edit_branch(id):
     # init the form
     branch = BranchForm()
     if branch.validate_on_submit():
-        # update data in the database 
-        branch_data.name = branch.name.data
-        branch_data.longitude = branch.longitude.data
-        branch_data.latitude = branch.latitude.data
-        branch_data.service = branch.service.data
-        branch_data.opens = branch.opens.data
-        branch_data.closes = branch.closes.data
-        branch_data.company = branch.company.data
-        branch_data.description = branch.description.data
-        
-        # update date to the database
-        db.session.commit()
+        # update data in the database
+        try:
+            branch_data.name = branch.name.data
+            branch_data.longitude = branch.longitude.data
+            branch_data.latitude = branch.latitude.data
+            branch_data.service = branch.service.data
+            branch_data.opens = branch.opens.data
+            branch_data.closes = branch.closes.data
+            branch_data.company = branch.company.data
+            branch_data.description = branch.description.data
+
+            # update date to the database
+            db.session.commit()
+        except sqlalchemy.exc.IntegrityError:
+            flash("Branch By That Name Exists","warning")
 
         # here we are going to push  the branch data to the lacalhost
         sio.emit("branch_edit", branch_schema.dump(branch_data))
@@ -664,10 +687,5 @@ except socketio.exceptions.ConnectionError:
     # print("...")
 
 
-# TODO : add endpoint for mpesa { reverse | b2c | status }
-# TODO: add payments to paymanest page error handling for the add branch
-# TODO: tickets printing
-# TODO: display module smoothing
 # TODO : app Issues
-# TODO : listing of video on the desktop app
 

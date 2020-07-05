@@ -310,9 +310,15 @@ const getData = (url,method,data,handleData) => {
 
 setInterval(()=>{
     getData("http://localhost:3000/doughnut/data","GET",{},(data)=>{
-        console.log(data)
         doughnut.data.datasets[0].data[0] =  data.open;
         doughnut.data.datasets[0].data[1] =  data.closed;
         doughnut.update();
+    })
+
+    getData("http://localhost:3000/bar/data","GET",{},(data)=>{
+        data.map((item,index)=>{
+            myChart.data.datasets[0].data[index+1] =  item.issuesCount;
+        })
+         myChart.update();
     })
 },1000)
