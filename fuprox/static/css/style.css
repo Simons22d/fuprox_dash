@@ -9,8 +9,20 @@
 //--//-->   STYLES GENERALES
 ======================================*/
 
+@font-face {
+    font-family: Gellix;
+    src: url("../assets/fonts/gellix/GellixRegular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Gellix;
+    font-weight: bold;
+    src: url("../assets/fonts/gellix/GellixBold.otf") format("opentype");
+}
+
+
 body {
-  font-family: 'Muli', sans-serif;
+  font-family: 'Gellix', Arial;
   color: #555555;
 }
 
