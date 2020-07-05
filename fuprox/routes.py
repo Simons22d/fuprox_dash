@@ -328,6 +328,7 @@ def add_category():
     # checkinf the mentioed  comapany exists
     if company.validate_on_submit():
         final = bool()
+        # medical
         if company.is_medical.data == "True":
             final = True
         else :
