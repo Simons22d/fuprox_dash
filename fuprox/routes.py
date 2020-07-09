@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, abort,jsonify
+from flask import render_template, url_for, flash, redirect, request, abort,jsonify,send_file
 from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
@@ -465,10 +465,10 @@ def desktop_app():
     pass
 
 
-@app.route("/extras/mobile")
+@app.route("/extras/mobile/download")
 @login_required
 def mobile_app():
-    pass
+    return send_file("../uploads/apps/mobile/fuprox.apk")
 
 
 ''' working with users'''

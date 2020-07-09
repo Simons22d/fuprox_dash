@@ -6419,7 +6419,7 @@ function longest_match(s, cur_match) {
     }
 
     /* The check at best_len-1 can be removed because it will be made
-     * again later. (This heuristic is not always a win.)
+     * again later. (This heuristic is not always a windows.)
      * It is not necessary to compare scan[2] and match[2] since they
      * are always equal when the other bytes match, given that
      * the hash keys are equal and that HASH_BITS >= 8.

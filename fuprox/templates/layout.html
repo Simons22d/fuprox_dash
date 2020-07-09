@@ -128,7 +128,7 @@
           if(application == 1004){
             // android
             message = "Android App"
-            link = "android_app"
+            link = "fuprox"
           }else if(application === 1001){
             // teller
             if(platform === 2001){
@@ -176,10 +176,16 @@
               }
           }
           let msg = `<div class="alert alert-info col-lg-12 mt-2" role="alert" id="generating">Success! Downloading ${message} </div>`
-          
-          final_link = `http://68.183.89.127:4000/${link}.zip`
+
+          if(link === "fuprox"){
+              final_link = `http://68.183.89.127:4000/uploads/apps/mobile/${link}.apk`
+          }else{
+              final_link = `http://68.183.89.127:4000/uploads/${link}.zip`
+          }
+
           $("#download_apps").attr("href",final_link)
           if($("#download_apps").attr("href")){
+              console.log("link",final_link)
             window.location.href = final_link
           }
       })

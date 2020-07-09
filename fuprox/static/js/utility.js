@@ -296,29 +296,3 @@ $('#generate').on("click",()=>{
 
 // Here we are going to update the graphs
 
-// function to make ajax: Text calls
-const getData = (url,method,data,handleData) => {
-    $.ajax({
-        url: url,
-        method: method,
-        data: data,
-        success: function (result) {
-            handleData(result);
-        }
-    });
-}
-
-setInterval(()=>{
-    getData("http://localhost:3000/doughnut/data","GET",{},(data)=>{
-        doughnut.data.datasets[0].data[0] =  data.open;
-        doughnut.data.datasets[0].data[1] =  data.closed;
-        doughnut.update();
-    })
-
-    getData("http://localhost:3000/bar/data","GET",{},(data)=>{
-        data.map((item,index)=>{
-            myChart.data.datasets[0].data[index+1] =  item.issuesCount;
-        })
-         myChart.update();
-    })
-},1000)
