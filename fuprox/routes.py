@@ -458,17 +458,57 @@ def register():
 
 
 # new ]
-@app.route("/download/app",methods=["POST"])
-@login_required
-def all_apps():
-    file = request.json['file']
-    return send_file(f"uploads/apps/{file}")
+@app.route("/download/book/mac",methods=["GET"])
+def book_mac():
+    return send_file("uploads/apps/book_mac.zip",attachment_filename="book_mac.zip")
+
+@app.route("/download/book/windows",methods=["GET"])
+def book_win():
+    return send_file("uploads/apps/book_windows.zip",attachment_filename="book_windows.zip")
 
 
-@app.route("/download/mobile",methods=["GET"])
-@login_required
+@app.route("/download/book/linux",methods=["GET"])
+def book_lin():
+    return send_file("uploads/apps/book_linux.zip",attachment_filename="book_linux.zip")
+
+
+@app.route("/download/teller/mac",methods=["GET"])
+def teller_mac():
+    return send_file("uploads/apps/teller_mac.zip",attachment_filename="teller_mac.zip")
+
+@app.route("/download/teller/windows",methods=["GET"])
+def teller_win():
+    return send_file("uploads/apps/teller_windows.zip",attachment_filename="teller_windows.zip")
+
+
+@app.route("/download/teller/linux",methods=["GET"])
+def teller_lin():
+    return send_file("uploads/apps/teller_linux.zip",attachment_filename="teller_linux.zip")
+
+
+@app.route("/download/display/mac",methods=["GET"])
+def display_mac():
+    return send_file("uploads/apps/display_mac.zip",attachment_filename="display_mac.zip")
+
+@app.route("/download/display/windows",methods=["GET"])
+def display_win():
+    return send_file("uploads/apps/display_windows.zip",attachment_filename="display_windows.zip")
+
+
+@app.route("/download/display/linux",methods=["GET"])
+def display_linux():
+    return send_file("uploads/apps/display_linux.zip",attachment_filename="display_linux.zip")
+
+
+
+
+
+
+@app.route("/download/app",methods=["GET"])
 def mobile_app():
     return send_file("uploads/apps/fuprox.apk")
+
+
 
 
 
@@ -649,6 +689,7 @@ def send_email():
     to = request.json["email"]
     subject = request.json["subject"]
     body = request.json["body"]
+    print("to",to)
     return email(to,subject,body)
 
 # edit company

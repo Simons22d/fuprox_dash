@@ -126,7 +126,9 @@
             $.ajax({
                 url: url,
                 method: method,
-                data: data,
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(data),
                 success: function (result) {
                     handleData(result);
                 }
@@ -141,74 +143,54 @@
           if(application == 1004){
             // android
             message = "Android App"
-            link = "fuprox"
+            link = "app"
           }else if(application === 1001){
             // teller
             if(platform === 2001){
               // windows
             message = "Windows Teller App"
-            link = "teller_windows"
+            link = "teller/windows"
             }else if(platform === 2002){
               // mac
-             link = "teller_windows"
+             link = "teller/windows"
              message = "Mac Teller App"
             }else if(platform === 2003){
               // linux
-              link = "teller_linux"
+              link = "teller/linux"
               message = "Linux Teller App"
             }
           }else if(application === 1002){
               // display
               if(platform === 2001){
                 // windows
-                link = "display_windows"
+                link = "display/windows"
                 message = "Windows Display App"
               }else if(platform === 2002){
                 // mac
-                link = "display_mac"
+                link = "display/mac"
                 message = "Mac Display App"
               }else if(platform === 2003){
                 // linux
-                link = "display_linux"
+                link = "display/linux"
                 message = "Linux Display App"
               }
           }else if(application === 1003){
               // book
               if(platform === 2001){
                 // windows
-                link = "book_windows"
+                link = "book/windows"
                 message = "Windows Book App"
               }else if(platform === 2002){
                 // mac
-                link = "book_mac"
+                link = "book/mac"
                 message = "Mac Book App"
               }else if(platform === 2003){
                 // linux
-                link = "book_linux"
+                link = "book/linux"
                 message = "Linux Book App"
               }
           }
-          let msg = `<div class="alert alert-info col-lg-12 mt-2" role="alert" id="generating">Success! Downloading ${message} </div>`
-
-          if(link === "fuprox"){
-              final_link = `http://68.183.89.127:4000/uploads/apps/mobile/${link}.apk`
-          }else{
-              final_link = `http://68.183.89.127:4000/uploads/${link}.zip`
-          }
-
-          $("#download_apps").attr("href",final_link)
-          if($("#download_apps").attr("href")){
-              console.log("link",final_link)
-            window.location.href = final_link
-            //  here we are going ot make a post  from the download file
-              getData("http://localhost:4000/download/apps","POST",{
-                  "file" :`{final_link}.zip`
-              },(data)=>{
-                  console.log(data)
-              })
-
-
-          }
+          window.location.href = `http://localhost:3000/download/${link}`
       })
   </script>
 </body>
