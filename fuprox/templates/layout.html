@@ -80,6 +80,7 @@
           <script src="{{ url_for('static',filename='js/main.js') }}"></script>
           <script src="{{ url_for('static',filename='js/utility.js') }}"></script>
   <script>
+
        // $('[data-toggle="tooltip"]').tooltip()
       	// adding tooltip support
         $(function () {
@@ -120,6 +121,18 @@
       $("#reverse_main").on("click",()=>{
           console.log("reserve transaction")
       })
+
+     const getData = (url,method,data,handleData) => {
+            $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                success: function (result) {
+                    handleData(result);
+                }
+            });
+      }
+
 
       $("#download_apps").on("click",(e)=>{
           let application = Number($("#application").val())
@@ -187,6 +200,14 @@
           if($("#download_apps").attr("href")){
               console.log("link",final_link)
             window.location.href = final_link
+            //  here we are going ot make a post  from the download file
+              getData("http://localhost:4000/download/apps","POST",{
+                  "file" :`{final_link}.zip`
+              },(data)=>{
+                  console.log(data)
+              })
+
+
           }
       })
   </script>

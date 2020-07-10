@@ -458,17 +458,18 @@ def register():
 
 
 # new ]
-
-@app.route("/extras/desktop")
+@app.route("/download/app",methods=["POST"])
 @login_required
-def desktop_app():
-    pass
+def all_apps():
+    file = request.json['file']
+    return send_file(f"uploads/apps/{file}")
 
 
-@app.route("/extras/mobile/download")
+@app.route("/download/mobile",methods=["GET"])
 @login_required
 def mobile_app():
-    return send_file("../uploads/apps/mobile/fuprox.apk")
+    return send_file("uploads/apps/fuprox.apk")
+
 
 
 ''' working with users'''
