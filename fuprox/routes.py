@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, abort,jsonify,send_file
+from flask import render_template, url_for, flash, redirect, request, abort,jsonify,send_file,send_from_directory
 from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
@@ -460,44 +460,47 @@ def register():
 # new ]
 @app.route("/download/book/mac",methods=["GET"])
 def book_mac():
-    return send_file("uploads/apps/book_mac.zip",attachment_filename="book_mac.zip")
+    return send_from_directory("uploads/apps","book_mac.zip",as_attachment=True)
 
 @app.route("/download/book/windows",methods=["GET"])
 def book_win():
-    return send_file("uploads/apps/book_windows.zip",attachment_filename="book_windows.zip")
+    return send_from_directory("uploads/apps","book_windows.zip",
+                               as_attachment=True)
 
 
 @app.route("/download/book/linux",methods=["GET"])
 def book_lin():
-    return send_file("uploads/apps/book_linux.zip",attachment_filename="book_linux.zip")
+    return send_from_directory("uploads/apps","book_linux.zip",as_attachment=True)
 
 
 @app.route("/download/teller/mac",methods=["GET"])
 def teller_mac():
-    return send_file("uploads/apps/teller_mac.zip",attachment_filename="teller_mac.zip")
+    return send_from_directory("uploads/apps","teller_mac.zip",as_attachment=True)
 
 @app.route("/download/teller/windows",methods=["GET"])
 def teller_win():
-    return send_file("uploads/apps/teller_windows.zip",attachment_filename="teller_windows.zip")
+    return send_from_directory("uploads/apps","teller_windows.zip",
+                               as_attachment=True)
 
 
 @app.route("/download/teller/linux",methods=["GET"])
 def teller_lin():
-    return send_file("uploads/apps/teller_linux.zip",attachment_filename="teller_linux.zip")
+    return send_from_directory("uploads/apps","teller_linux.zip",
+                               as_attachment=True)
 
 
 @app.route("/download/display/mac",methods=["GET"])
 def display_mac():
-    return send_file("uploads/apps/display_mac.zip",attachment_filename="display_mac.zip")
+    return send_from_directory("uploads/apps","display_mac.zip",as_attachment=True)
 
 @app.route("/download/display/windows",methods=["GET"])
 def display_win():
-    return send_file("uploads/apps/display_windows.zip",attachment_filename="display_windows.zip")
+    return send_from_directory("uploads/apps","display_windows.zip",as_attachment=True)
 
 
 @app.route("/download/display/linux",methods=["GET"])
 def display_linux():
-    return send_file("uploads/apps/display_linux.zip",attachment_filename="display_linux.zip")
+    return send_from_directory("uploads/apps","display_linux.zip",as_attachment=True)
 
 
 
@@ -506,7 +509,7 @@ def display_linux():
 
 @app.route("/download/app",methods=["GET"])
 def mobile_app():
-    return send_file("uploads/apps/fuprox.apk")
+    return send_from_directory("uploads/apps","fuprox.apk",as_attachment=True)
 
 
 
