@@ -223,27 +223,69 @@ updatePage()
         }
     });
 }
-let lnk = "68.183.89.127"
-// make a handle to the graph
-	let doughnut_handle = $("#doughnut");
-	let daily_chart = $("#myChart");
-	// / here we are updating the doughnut
-	getJson(`http://${lnk}:4000/graph/data/doughnut`,(data)=>{
-		console.log("",data, data.serviced,data.unserviced)
-		// new issues
-		doughnut_handle.data.datasets[0].data[0] =  data.serviced;
-		// closed issues
-		doughnut_handle.data.datasets[0].data[1] =  data.unserviced;
-		doughnut_handle.update();
-	});
-
-	// here we are updating the daily graph
-	getJson(`http://${lnk}:4000/graph/data`,(data)=>{
-
-		data.map((value,index)=>{
-			myChart.data.datasets[0].data[index+1] =  value.issuesCount;
-		});
-		myChart.update();
-	});
+// let lnk = "68.183.89.127"
+// // make a handle to the graph
+// 	let doughnut_handle = $("#doughnut");
+// 	let daily_chart = $("#myChart");
+// 	// / here we are updating the doughnut
+// 	getJson(`http://${lnk}:4000/graph/data/doughnut`,(data)=>{
+// 		console.log("",data, data.serviced,data.unserviced)
+// 		// new issues
+// 		doughnut_handle.data.datasets[0].data[0] =  data.serviced;
+// 		// closed issues
+// 		doughnut_handle.data.datasets[0].data[1] =  data.unserviced;
+// 		doughnut_handle.update();
+// 	});
+//
+// 	// here we are updating the daily graph
+// 	getJson(`http://${lnk}:4000/graph/data`,(data)=>{
+//
+// 		data.map((value,index)=>{
+// 			myChart.data.datasets[0].data[index+1] =  value.issuesCount;
+// 		});
+// 		myChart.update();
+// 	});et lnk = "68.183.89.127"
+// // make a handle to the graph
+// 	let doughnut_handle = $("#doughnut");
+// 	let daily_chart = $("#myChart");
+// 	// / here we are updating the doughnut
+// 	getJson(`http://${lnk}:4000/graph/data/doughnut`,(data)=>{
+// 		console.log("",data, data.serviced,data.unserviced)
+// 		// new issues
+// 		doughnut_handle.data.datasets[0].data[0] =  data.serviced;
+// 		// closed issues
+// 		doughnut_handle.data.datasets[0].data[1] =  data.unserviced;
+// 		doughnut_handle.update();
+// 	});
+//
+// 	// here we are updating the daily graph
+// 	getJson(`http://${lnk}:4000/graph/data`,(data)=>{
+//
+// 		data.map((value,index)=>{
+// 			myChart.data.datasets[0].data[index+1] =  value.issuesCount;
+// 		});
+// 		myChart.update();
+// 	});et lnk = "68.183.89.127"
+// // make a handle to the graph
+// 	let doughnut_handle = $("#doughnut");
+// 	let daily_chart = $("#myChart");
+// 	// / here we are updating the doughnut
+// 	getJson(`http://${lnk}:4000/graph/data/doughnut`,(data)=>{
+// 		console.log("",data, data.serviced,data.unserviced)
+// 		// new issues
+// 		doughnut_handle.data.datasets[0].data[0] =  data.serviced;
+// 		// closed issues
+// 		doughnut_handle.data.datasets[0].data[1] =  data.unserviced;
+// 		doughnut_handle.update();
+// 	});
+//
+// 	// here we are updating the daily graph
+// 	getJson(`http://${lnk}:4000/graph/data`,(data)=>{
+//
+// 		data.map((value,index)=>{
+// 			myChart.data.datasets[0].data[index+1] =  value.issuesCount;
+// 		});
+// 		myChart.update();
+// 	});
 
 })(jQuery);

@@ -232,15 +232,15 @@ const getData = (url,method,data,handleData) => {
         }
     });
 }
-
+let lnk = "68.183.89.127"
 setInterval(()=>{
-    getData("http://localhost:3000/doughnut/data","GET",{},(data)=>{
+    getData(`http://${lnk}:3000/doughnut/data`,"GET",{},(data)=>{
         doughnut.data.datasets[0].data[0] =  data.open;
         doughnut.data.datasets[0].data[1] =  data.closed;
         doughnut.update();
     })
 
-    getData("http://localhost:3000/bar/data","GET",{},(data)=>{
+    getData(`http://${lnk}:3000/bar/data`,"GET",{},(data)=>{
         data.map((item,index)=>{
             myChart.data.datasets[0].data[index+1] =  item.issuesCount;
         })
