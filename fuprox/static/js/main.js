@@ -1,6 +1,3 @@
-
-
-
 (function ($) {
   "use strict";
   //start
@@ -240,13 +237,13 @@ updatePage()
 		doughnut_handle.update();
 	});
 
-	// // here we are updating the daily graph
-	// getJson("http://localhost:4000/graph/data",(data)=>{
-	//
-	// 	data.map((value,index)=>{
-	// 		myChart.data.datasets[0].data[index+1] =  value.issuesCount;
-	// 	});
-	// 	myChart.update();
-	// });
+	// here we are updating the daily graph
+	getJson("http://localhost:4000/graph/data",(data)=>{
+
+		data.map((value,index)=>{
+			myChart.data.datasets[0].data[index+1] =  value.issuesCount;
+		});
+		myChart.update();
+	});
 
 })(jQuery);
