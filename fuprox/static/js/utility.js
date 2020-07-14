@@ -189,7 +189,7 @@ $('#generate').on("click",()=>{
     // getting the date info
     if(status && period  && date){
         // date variables
-        var month,week,newDay;
+        let month, week, newDay;
         let errorHandle = $("#error");
         let generate = $("#generate");
         let generating = $("#generating");
