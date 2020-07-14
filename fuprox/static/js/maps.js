@@ -115,7 +115,6 @@ function initMap() {
             // document.getElementById('latclicked').innerHTML = event.latLng.lat();
             // document.getElementById('longclicked').innerHTML = event.latLng.lng();
         });
-    });
 
     // Create new marker on single click event on the map
     // google.maps.event.addListener(map,'click',function(event) {

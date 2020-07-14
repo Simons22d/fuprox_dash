@@ -4,6 +4,9 @@ from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
 from fuprox.models import User,Company,Branch, Service,Help,BranchSchema,CompanySchema,ServiceSchema,Mpesa, MpesaSchema,Booking,BookingSchema
 from fuprox.utility import reverse
+import tablib
+from datetime import datetime
+import time
 
 
 from datetime import datetime
@@ -24,8 +27,6 @@ company_schema =CompanySchema()
 mpesa_schema = MpesaSchema()
 mpesas_schema = MpesaSchema(many=True)
 bookings_schema = BookingSchema(many=True)
-
-
 
 
 @app.route("/")
@@ -49,13 +50,69 @@ def _doughnut_data():
 
     return jsonify({"open":len(open_data),"closed":len(closed_data)})
 
+
 @app.route("/bar/data",methods=["GET"])
 def last_fifteen_data():
     data = get_issue_count()
     return jsonify(data["result"])
 
+file_name = str()
+dir = str()
+
+@app.route("/dashboard/reports",methods=["POST"])
+def daily():
+    secrets.token_hex()
+    duration = request.json["duration"] # daily monthly
+    kind = request.json["kind"] # booking / branch
+    date = request.json["date"] # date
+    print(duration,date,kind)
+    # getting the current path
+
+    # FILE BASED REPORTS
+    # import os
+    # global file_name,dir
+    #
+    # # file_name = f"{int(datetime.timestamp(datetime.now()))}_report..xlsx"
+    # file_name = "report.xlsx"
+    # dir = os.path.join(os.getcwd(),"fuprox","reports")
+    # root_file = os.path.join(dir,file_name)
+    # # TEST
+    # headers = ("firstname","lastname")
+    # data = [("Denis", "Wambui"), ("Mark", "Kiruku")]
+    # data_ = tablib.Dataset(*data, headers=headers)
+    # with open(root_file, 'wb') as f:
+    #     f.write(data_.export('xlsx'))
+    # # send_file(file)
 
 
+    booking_data = list()
+    if duration and kind and date:
+        print(kind, date, duration)
+        kind_ = 1001 if kind == 0 else 2001
+        duration_ = 1001 if duration == 'day' else 2001
+        if duration_ == 1001:
+            print("1001")
+            # daily
+            date = "%{}%".format(date)
+            print(date)
+            lookup = Booking.query.filter(Booking.date_added.like(date)).all()
+            booking_data = bookings_schema.dump(lookup)
+        else:
+            print("2001")
+            #monthly
+            date_ = date.split("-")
+            print(f"{date_[0]}-{date_[1]}")
+            date = f"{date_[0]}-{date_[1]}"
+            date = "%{}%".format(date)
+            print(date)
+            lookup = Booking.query.filter(Booking.date_added.like(date)).all()
+            booking_data = bookings_schema.dump(lookup)
+    return jsonify(booking_data)
+
+
+@app.route("/mpesa/reports",methods=["POST"])
+def mpesa_reports():
+    pass
 
 """
 function to get issue count >>>>
@@ -236,14 +293,8 @@ def branches():
                                      <td style="border-collapse:collapse!important;box-sizing:border-box;color:#222222;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:14px;font-weight:normal;line-height:19px;margin:0;padding:0;text-align:left;vertical-align:top;word-break:break-word" valign="top" align="left"></td>
                                  </tr>
                              </tbody></table>
-
-
-
-
-
-                                                     </div>
-
-                                                   </td>
+                                 </div>
+                                       </td>
                                                  </tr>
                                                </tbody></table>
 
@@ -268,12 +319,12 @@ def branches():
 
                              """
                 try:
-                    try:
-                        pass
-                    except socket.gaierror:
-                        pass
-                    # email((branch.email.data).strip(),"Branch Key from Fuprox",body)
-                    pass
+                    # try:
+                    #     pass
+                    # except socket.gaierror:
+                    #     pass
+                    email((branch.email.data).strip(),"Branch Key from Fuprox",body)
+                    # pass
                 except UnicodeEncodeError :
                     # warn about sending a email and offer a link to sending the email
                     print("Error! error Sending email")
