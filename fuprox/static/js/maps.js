@@ -65,8 +65,6 @@ searchHandle.addEventListener("keyup",(e)=>{
 
 
 function initMap() {
-
-
     var myLatLng = { lat: latitude, lng: longitude };
 
     map = new google.maps.Map(handle, {
@@ -100,8 +98,8 @@ function initMap() {
     marker.addListener('click', function (event) {
         let lat = event.latLng.lat();
         let long = event.latLng.lng();  
-        document.getElementById('latclicked').innerHTML = lat;
-        document.getElementById('longclicked').innerHTML = long;
+        // document.getElementById('latclicked').innerHTML = lat;
+        // document.getElementById('longclicked').innerHTML = long;
     });
 
     // Create new marker on double click event on the map
@@ -113,9 +111,9 @@ function initMap() {
         });
 
         // Update lat/long value of div when the marker is clicked
-        marker.addListener('click', function () {
-            document.getElementById('latclicked').innerHTML = event.latLng.lat();
-            document.getElementById('longclicked').innerHTML = event.latLng.lng();
+        // marker.addListener('click', function () {
+            // document.getElementById('latclicked').innerHTML = event.latLng.lat();
+            // document.getElementById('longclicked').innerHTML = event.latLng.lng();
         });
     });
 
