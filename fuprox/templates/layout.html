@@ -106,12 +106,80 @@
             window.location = `${url}/info/${id}`
         };
 
+        const prefillForm = (data, title = "") => {
+            // get the table handle
+            let handle = $("#report");
+            if (title !== "") {
+                handle.append(`<tr><td>${title}</td></tr>`)
+            }
+            // working with the report data
+            // mappiong begins
+            mapper =["Local","Online","Instant"]
+            data.map((value, key) => {
+                let id = value.id;
+                let branch_id = value.branch_id;
+                let active_ = value.active ? "Active" : "Serviced";
+                let forwarded = value.forwarded ? "Fowarded": "Not Forwarded";
+                let kind = mapper["kind"];
+                let service_name = value.service_name;
+                let serviced = value.serviced;
+                let start = value.start;
+                let teller = value.teller;
+                let user = value.user;
+
+                handle.append(
+                    `<tr class="asset" onclick="" id="${id}">
+                            <th data-id="${id}">${id}</th>
+                            <td data-id="${id}">${branch_id}</td>
+                            <td data-id="${id}">${active_}</td>
+                            <td data-id="${id}">${forwarded}</td>
+                            <td data-id="${id}">${kind}</td>
+                            <td data-id="${id}">${service_name}</td>
+                            <td data-id="${id}">${serviced}</td>
+                            <td data-id="${id}">${start}</td>
+                            <td data-id="${id}">${teller}</td>
+                            <td data-id="${id}">${user}</td>
+                        </tr>`)
+            })
+    }
+
       $('#back_payments').on("click",()=>{
         let location = sessionStorage.getItem("prev");
         window.location = location.length > 1 ? location : "http://localhost:3000/payments"
       });
-
+      // genarate reports
       $("#generate_payments").on("click",()=>{
+
+          /*
+          * <!--
+            {
+                "amount": 5.0,
+                "checkout_request_id": "ws_CO_090720201422507223",
+                "date_added": "2020-07-09T11:27:52",
+                "id": 2,
+                "local_transactional_key": "3a5ec789b6b09619f2dd",
+                "merchant_request_id": "17556-3808479-1",
+                "phone_number": "254719573310",
+                "receipt_number": "OG99LZHERF",
+                "result_code": 0,
+                "result_desc": "The service request is processed successfully.",
+                "transaction_date": "20200709142258"
+            },
+            -->
+            <tr>
+                <th scope="col" id="issueid">Transaction ID</th>
+                <th scope="col" id="from">Reciept Number</th>
+                <th scope="col" id="subject">Phone number</th>
+                <th scope="col" id="dateReceived">Checkout Reqeust ID</th>
+                <th scope="col" id="assignedTo">Result Code</th>
+                <th scope="col" id="dateAssigned">Local Transaction Key</th>
+                <th scope="col" id="resolvedBy">AMount</th>
+                <th scope="col" id="resolveDate">Status</th>
+          * */
+          getData(`http://${lnk}:3000/mpesa/reports`,"POST",{"kind"},(data)=>{
+              console.log(data)
+              prefillForm(data,"Payment Reports")
+          })
           console.log("generate mpesa reports")
        });
 

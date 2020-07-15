@@ -110,9 +110,18 @@ def daily():
     return jsonify(booking_data)
 
 
+'''mpesa report '''
+
 @app.route("/mpesa/reports",methods=["POST"])
 def mpesa_reports():
-    pass
+    kind = request.json["kind"]
+    if int(kind) == 1 :
+        lookup = Mpesa.query.filter(Mpesa.amount.contains(5.0)).all()
+    elif int(kind) == 2:
+        lookup = Mpsa.query.filter(Mpesa.amount.contains(10.0)).all()
+    elif int(kind) == 3:
+        lookup = Mpesa.query.all()
+    return jsonify(mpesas_schema.dump(lookup))
 
 """
 function to get issue count >>>>
@@ -266,7 +275,7 @@ def branches():
                                                  work for the branch <b> {branch.name.data}. </b>
                                                  <br>Please do not loose this key.
                                                  <br><br>
-                                                 <pre></pre>
+                                                 <pre>{key_}</pre>
                                                  <br>
                                                  If your are not sure of how to use the key on the applications. <br><br>
                                                  Please Follow <a href='http://68.183.89.127:3000/help'>this</a>
