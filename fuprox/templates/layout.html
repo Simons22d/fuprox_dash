@@ -176,11 +176,11 @@
                 <th scope="col" id="resolvedBy">AMount</th>
                 <th scope="col" id="resolveDate">Status</th>
           * */
-          getData(`http://${lnk}:3000/mpesa/reports`,"POST",{"kind"},(data)=>{
+          getData(`http://${lnk}:3000/mpesa/reports`,"POST",{"kind":""},(data)=>{
               console.log(data)
               prefillForm(data,"Payment Reports")
           })
-          console.log("generate mpesa reports")
+
        });
 
       $("#report_main").on("click",()=>{
