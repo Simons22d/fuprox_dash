@@ -2,12 +2,13 @@ from flask import render_template, url_for, flash, redirect, request, abort,json
 from fuprox import app, db,bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
-from fuprox.models import User,Company,Branch, Service,Help,BranchSchema,CompanySchema,ServiceSchema,Mpesa, MpesaSchema,Booking,BookingSchema
+from fuprox.models import User,Company,Branch, Service,Help,BranchSchema,CompanySchema,ServiceSchema,Mpesa, \
+    MpesaSchema,Booking,BookingSchema,ImageCompany,ImageCompanySchema
 from fuprox.utility import reverse
 import tablib
 from datetime import datetime
 import time
-
+from PIL import Image
 
 from datetime import datetime
 import secrets
@@ -27,6 +28,9 @@ company_schema =CompanySchema()
 mpesa_schema = MpesaSchema()
 mpesas_schema = MpesaSchema(many=True)
 bookings_schema = BookingSchema(many=True)
+comapny_image_schema = ImageCompanySchema()
+comapny_image_schemas = ImageCompanySchema(many=True)
+
 
 
 @app.route("/")
@@ -407,6 +411,46 @@ def add_category():
     return render_template("add_category.html", form=company)
 
 
+import os
+
+
+def move_to_api(filename):
+    from pathlib import Path
+    import shutil
+    home = str(Path.home())
+    from_ = os.path.join(app.root_path, "icons",filename)
+    upload_path = os.path.join(home, "fuprox_api","fuprox", "icons", filename)
+    upload_pth = os.path.join(home, "fuprox_api","fuprox","icons")
+    if not os.path.exists(f"{home}/fuprox_api/fuprox/icons"):
+        try:
+            new_dir = Path(upload_path)
+            new_dir.mkdir(parents=True)
+            shutil.move(from_,upload_pth)
+            logging.info("Success! creating a directory.")
+            return "Direcroty Created Successfully."
+        except OSError:
+            logging.info("Error! creating a directory.")
+            return "Error! creating a directory."
+    else:
+        shutil.move(from_, upload_path)
+
+
+def save_picture(picture):
+    pic_name = secrets.token_hex(8)
+    # getting the name and the extension of the image
+    _,ext = os.path.splitext(picture.filename)
+    final_name = pic_name + ext
+    picture_path = os.path.join(app.root_path,"icons", final_name)
+    # resizing the file
+    size =(125,125)
+    i = Image.open(picture)
+    i.thumbnail(size)
+    # saving the thumbnail
+    i.save(picture_path)
+    move_to_api(final_name)
+    return final_name
+
+
 @app.route("/branches/company", methods=["GET", "POST"])
 @app.route("/branches/company/add", methods=["POST", "GET"])
 @login_required
@@ -423,8 +467,23 @@ def add_company():
                 data = Company(company.name.data, company.service.data)
                 db.session.add(data)
                 db.session.commit()
-            except sqlalchemy.exc.IntegrityError:
+
+                print("NMNMNMNMN>>>>", company.icon.data)
+
+                if company.icon.data:
+                    #get company by name
+                    company_data = Company.query.filter_by(name=company.name.data).first()
+                    filename = save_picture(company.icon.data)
+                    icon_data = ImageCompany(company_data.id,filename)
+                    db.session.add(icon_data)
+                    db.session.commit()
+                else:
+                    flash("Error!Icon Was Not Uploaded.","error")
+                    redirect(url_for("add_company"))
+            except sqlalchemy.exc.InvalidRequestError:
                 flash("Company By That Name Exists","warning")
+            except sqlalchemy.exc.IntegrityError:
+                flash("Company By That Name Exists", "warning")
             # add company
             sio.emit("company", company_schema.dump(data))
 

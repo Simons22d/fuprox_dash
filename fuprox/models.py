@@ -1,8 +1,8 @@
-from fuprox import db, ma, login_manager, app
-from flask_login import UserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
-import secrets
+
+from flask_login import UserMixin
+
+from fuprox import db, ma, login_manager
 
 
 @login_manager.user_loader
@@ -36,7 +36,7 @@ class User(db.Model, UserMixin):
 
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(length=50),unique=True)
+    name = db.Column(db.String(length=50), unique=True)
     service = db.Column(db.String(length=250))
 
     def __init__(self, name, service):
@@ -49,7 +49,7 @@ class Company(db.Model):
 
 class CompanySchema(ma.Schema):
     class Meta:
-        fields = ("id","name","service")
+        fields = ("id", "name", "service")
 
 
 # creating a branch class
@@ -85,11 +85,12 @@ class BranchSchema(ma.Schema):
             'id', 'name', 'company', 'address', 'longitude', 'latitude', 'opens', 'closes', 'service', 'description',
             "key_", "valid_till")
 
+
 # creating a user class
 # creating a company class
 class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(length=50),unique=True)
+    name = db.Column(db.String(length=50), unique=True)
     service = db.Column(db.String(length=250))
     is_medical = db.Column(db.Boolean, default=False)
 
@@ -101,7 +102,7 @@ class Service(db.Model):
 
 class ServiceSchema(ma.Schema):
     class Meta:
-        fields = ("id","name","service","is_medical")
+        fields = ("id", "name", "service", "is_medical")
 
 
 class Help(db.Model):
@@ -143,7 +144,6 @@ class MpesaSchema(ma.Schema):
                   "merchant_request_id", "result_code", "result_desc", "date_added", "local_transactional_key")
 
 
-
 # creating a booking ID
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -180,5 +180,19 @@ class Booking(db.Model):
 
 class BookingSchema(ma.Schema):
     class Meta:
-        fields = ("id", "service_name", "start", "branch_id", "ticket", "active", "next", "serviced", "teller", \
-                  "kind", "user", "is_instant", "forwarded", "")
+        fields = ("id", "service_name", "start", "branch_id", "ticket", "active", "next", "serviced", "teller", "kind", "user", "is_instant", "forwarded", "")
+
+
+class ImageCompany(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company = db.Column(db.ForeignKey("company.id"), nullable=False)
+    image = db.Column(db.String(length=250), nullable=False)
+
+    def __init__(self, company, image):
+        self.company = company
+        self.image = image
+
+
+class ImageCompanySchema(ma.Schema):
+    class Meta:
+        fields = ("id", "company", "image")

@@ -94,7 +94,7 @@
       </div>
 
     <div class="col-lg-5">
-            <form action="" method="POST" >
+            <form action="" method="POST" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
             <div class="row container mb-3"><div class="text-muted">Company Details</div>
                 <br>
@@ -115,6 +115,23 @@
                 </div>
                 {% else %}
                     {{ form.name(class="form-control form-control-sm ",id="suggestLocation")}}
+                {% endif %}
+              </div>
+            </div>
+
+
+            <div class="row mb-1">
+              <div class="col-lg-12">
+                {{ form.icon.label(class='form-control-label') }}
+                {% if form.icon.errors %}
+                {{ form.icon(class="form-control form-control-sm is-invalid",id="suggestLocation")}}
+                <div class="invalid-feedback">
+                    {% for error in form.icon.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    {{ form.icon(class="form-control form-control-sm ",id="suggestLocation")}}
                 {% endif %}
               </div>
             </div>
@@ -140,8 +157,6 @@
                 <small class="form-text text-muted"></small>
               </div>
             </div>
-
-
 
             <div class="row">
                 <div class="col-lg-12 mt-3">

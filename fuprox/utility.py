@@ -2,8 +2,7 @@ import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-
-# mpesa 
+# mpesa
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -21,8 +20,6 @@ def authenticate():
     api_url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
     response = requests.get(api_url, auth=HTTPBasicAuth(consumer_key, consumer_secret))
     return response.text
-
-
 
 
 def email(_to, subject, body):
@@ -46,10 +43,10 @@ def email(_to, subject, body):
             return False
 
 
-
 """
 Reverse for the mpesa API
 """
+
 
 def reverse(transaction_id, amount, receiver_party):
     """
