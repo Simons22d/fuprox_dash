@@ -24,7 +24,6 @@ MarkupSafe==1.1.1
 marshmallow==3.5.1
 marshmallow-sqlalchemy==0.22.3
 monotonic==1.5
-mysql-connector-python-rf==2.2.2
 openpyxl==3.0.4
 pycparser==2.20
 python-engineio==3.12.1

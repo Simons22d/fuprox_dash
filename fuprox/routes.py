@@ -1,9 +1,9 @@
-from flask import render_template, url_for, flash, redirect, request, abort,jsonify,send_file,send_from_directory
-from fuprox import app, db,bcrypt
+from flask import render_template, url_for, flash, redirect, request, abort, jsonify, send_file, send_from_directory
+from fuprox import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
-from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm,ReportForm)
-from fuprox.models import User,Company,Branch, Service,Help,BranchSchema,CompanySchema,ServiceSchema,Mpesa, \
-    MpesaSchema,Booking,BookingSchema,ImageCompany,ImageCompanySchema
+from fuprox.forms import (RegisterForm, LoginForm, BranchForm, CompanyForm, ServiceForm, SolutionForm, ReportForm)
+from fuprox.models import User, Company, Branch, Service, Help, BranchSchema, CompanySchema, ServiceSchema, Mpesa, \
+    MpesaSchema, Booking, BookingSchema, ImageCompany, ImageCompanySchema
 from fuprox.utility import reverse
 import tablib
 from datetime import datetime
@@ -19,18 +19,16 @@ from flask_sqlalchemy import sqlalchemy
 sio = socketio.Client()
 socket_link = "http://127.0.0.1:5000/"
 
-
 # rendering many route to the same template
 branch_schema = BranchSchema()
 service_schema = ServiceSchema()
 services_schema = ServiceSchema(many=True)
-company_schema =CompanySchema()
+company_schema = CompanySchema()
 mpesa_schema = MpesaSchema()
 mpesas_schema = MpesaSchema(many=True)
 bookings_schema = BookingSchema(many=True)
 comapny_image_schema = ImageCompanySchema()
 comapny_image_schemas = ImageCompanySchema(many=True)
-
 
 
 @app.route("/")
@@ -42,34 +40,36 @@ def home():
     # report form
     # report = ReportForm()
     # rendering template
-    return render_template("dashboard.html",today=date)
+    return render_template("dashboard.html", today=date)
 
 
-@app.route("/doughnut/data",methods=["GET"])
+@app.route("/doughnut/data", methods=["GET"])
 def _doughnut_data():
     open_lookup = Booking.query.filter_by(serviced=False).all()
     open_data = bookings_schema.dump(open_lookup)
     closed_lookup = Booking.query.filter_by(serviced=True).all()
     closed_data = bookings_schema.dump(closed_lookup)
 
-    return jsonify({"open":len(open_data),"closed":len(closed_data)})
+    return jsonify({"open": len(open_data), "closed": len(closed_data)})
 
 
-@app.route("/bar/data",methods=["GET"])
+@app.route("/bar/data", methods=["GET"])
 def last_fifteen_data():
     data = get_issue_count()
     return jsonify(data["result"])
 
+
 file_name = str()
 dir = str()
 
-@app.route("/dashboard/reports",methods=["POST"])
+
+@app.route("/dashboard/reports", methods=["POST"])
 def daily():
     secrets.token_hex()
-    duration = request.json["duration"] # daily monthly
-    kind = request.json["kind"] # booking / branch
-    date = request.json["date"] # date
-    print(duration,date,kind)
+    duration = request.json["duration"]  # daily monthly
+    kind = request.json["kind"]  # booking / branch
+    date = request.json["date"]  # date
+    print(duration, date, kind)
     # getting the current path
 
     # FILE BASED REPORTS
@@ -88,7 +88,6 @@ def daily():
     #     f.write(data_.export('xlsx'))
     # # send_file(file)
 
-
     booking_data = list()
     if duration and kind and date:
         print(kind, date, duration)
@@ -103,7 +102,7 @@ def daily():
             booking_data = bookings_schema.dump(lookup)
         else:
             print("2001")
-            #monthly
+            # monthly
             date_ = date.split("-")
             print(f"{date_[0]}-{date_[1]}")
             date = f"{date_[0]}-{date_[1]}"
@@ -116,10 +115,11 @@ def daily():
 
 '''mpesa report '''
 
-@app.route("/mpesa/reports",methods=["POST"])
+
+@app.route("/mpesa/reports", methods=["POST"])
 def mpesa_reports():
     kind = request.json["kind"]
-    if int(kind) == 1 :
+    if int(kind) == 1:
         lookup = Mpesa.query.filter(Mpesa.amount.contains(5.0)).all()
     elif int(kind) == 2:
         lookup = Mpsa.query.filter(Mpesa.amount.contains(10.0)).all()
@@ -127,20 +127,24 @@ def mpesa_reports():
         lookup = Mpesa.query.all()
     return jsonify(mpesas_schema.dump(lookup))
 
+
 """
 function to get issue count >>>>
 """
 
+
 def get_issue_count():
     data = db.session.execute("SELECT COUNT(*) AS issuesCount, DATE (date_added) AS issueDate FROM booking GROUP BY "
-                           "issueDate LIMIT 15")
+                              "issueDate LIMIT 15")
     return {'result': [dict(row) for row in data]}
+
 
 """
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::working with all forms of payments linking to the database::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 """
+
 
 @app.route("/payments")
 @login_required
@@ -149,11 +153,11 @@ def payments():
     # get date from the database 
     lookup = Mpesa.query.all()
     data = mpesas_schema.dump(lookup)
-    print("mpesa",data)
-    return render_template("payment.html",transactions=data)
+    print("mpesa", data)
+    return render_template("payment.html", transactions=data)
 
 
-@app.route("/reverse",methods=["POST"])
+@app.route("/reverse", methods=["POST"])
 def reverse_():
     """ PARAMS
     'Initiator' => 'testapi',
@@ -173,12 +177,12 @@ def reverse_():
     transaction_id = data["receipt_number"]
     amount = data["amount"]
     receiver_party = data["phone_number"]
-    return reverse(transaction_id,amount,receiver_party)
+    return reverse(transaction_id, amount, receiver_party)
 
-def get_transaction(id): 
+
+def get_transaction(id):
     lookup = Mpesa.query.get(id)
     return mpesa_schema.dump(lookup)
-
 
 
 @app.route("/card")
@@ -188,7 +192,7 @@ def payments_card():
     lookup = Mpesa.query.all()
     data = mpesas_schema.dump(lookup)
     print("><>>>>>XX>>XXXXX")
-    print("mpesa",data)
+    print("mpesa", data)
     # work on the payments templates
     return render_template("payment_card.html", transactions=data)
 
@@ -199,8 +203,9 @@ def payments_report():
     # work on the payments templates
     return render_template("payments_reports.html")
 
+
 @app.route("/branches")
-@app.route("/branches/add",methods=["POST","GET"])
+@app.route("/branches/add", methods=["POST", "GET"])
 @login_required
 def branches():
     # get data from the database
@@ -211,11 +216,11 @@ def branches():
     if branch.validate_on_submit():
         # get specific compan data
         this_company_data = Company.query.filter_by(name=branch.company.data).first()
-        if this_company_data :
+        if this_company_data:
             key_ = secrets.token_hex();
             data = Branch(branch.name.data, branch.company.data, branch.longitude.data, branch.latitude.data,
                           branch.opens.data,
-                          branch.closes.data, branch.service.data, branch.email.data,key_)
+                          branch.closes.data, branch.service.data, branch.email.data, key_)
             if not branch_exits(branch.name.data):
                 data_ = branch_schema.dump(data)
                 # here we are going to push  the branch data to the lacalhost
@@ -336,9 +341,9 @@ def branches():
                     #     pass
                     # except socket.gaierror:
                     #     pass
-                    email((branch.email.data).strip(),"Branch Key from Fuprox",body)
+                    email((branch.email.data).strip(), "Branch Key from Fuprox", body)
                     # pass
-                except UnicodeEncodeError :
+                except UnicodeEncodeError:
                     # warn about sending a email and offer a link to sending the email
                     print("Error! error Sending email")
                 branch.name.data = ""
@@ -350,15 +355,17 @@ def branches():
                 branch.service.data = ""
                 branch.email.data = ""
                 flash(f"Branch Successfully Added", "success")
-            else :
-                flash("branch by that name exists","warning")
+            else:
+                flash("branch by that name exists", "warning")
                 redirect(url_for("home"))
         else:
-            flash("Company Does Not exist. Add company name first.","danger")
-    return render_template("add_branch.html",form=branch,companies = company_data,services=service_data)
+            flash("Company Does Not exist. Add company name first.", "danger")
+    return render_template("add_branch.html", form=branch, companies=company_data, services=service_data)
 
 
 """ not recommemded __check if current branhc is in db"""
+
+
 def branch_exits(name):
     lookup = Branch.query.filter_by(name=name).first()
     branch_data = branch_schema.dump(lookup)
@@ -368,10 +375,10 @@ def branch_exits(name):
 # mpesa more info
 @app.route("/info/<string:key>")
 def more_info(key):
-    print("key",key)
+    print("key", key)
     lookup = Mpesa.query.get(key)
     data = mpesa_schema.dump(lookup)
-    return render_template("info.html",data=data)
+    return render_template("info.html", data=data)
 
 
 # view_branch
@@ -381,11 +388,11 @@ def view_branch():
     # get data from the database
     branches_data = Branch.query.all()
     company = ServiceForm()
-    return render_template("view_branch.html",form=company,data = branches_data)
+    return render_template("view_branch.html", form=company, data=branches_data)
 
 
 @app.route("/branches/category")
-@app.route("/branches/category/add",methods=["POST","GET"])
+@app.route("/branches/category/add", methods=["POST", "GET"])
 @login_required
 def add_category():
     company = ServiceForm()
@@ -395,19 +402,21 @@ def add_category():
         # medical
         if company.is_medical.data == "True":
             final = True
-        else :
+        else:
             final = False
         try:
-            data = Service(company.name.data, company.service.data,final)
+            data = Service(company.name.data, company.service.data, final)
             db.session.add(data)
             db.session.commit()
         except sqlalchemy.exc.IntegrityError:
-            flash(f"Category By That Name Exists","warning")
+            flash(f"Category By That Name Exists", "warning")
         # adding a category
-        sio.emit("category",  service_schema.dump(data))
+        sio.emit("category", service_schema.dump(data))
         company.name.data = ""
         company.service.data = ""
         flash(f"Service Successfully Added", "success")
+    else:
+        flash("Error! Make Sure all data is correct","error")
     return render_template("add_category.html", form=company)
 
 
@@ -418,14 +427,14 @@ def move_to_api(filename):
     from pathlib import Path
     import shutil
     home = str(Path.home())
-    from_ = os.path.join(app.root_path, "icons",filename)
-    upload_path = os.path.join(home, "fuprox_api","fuprox", "icons", filename)
-    upload_pth = os.path.join(home, "fuprox_api","fuprox","icons")
+    from_ = os.path.join(app.root_path, "icons", filename)
+    upload_path = os.path.join(home, "fuprox_api", "fuprox", "icons", filename)
+    upload_pth = os.path.join(home, "fuprox_api", "fuprox", "icons")
     if not os.path.exists(f"{home}/fuprox_api/fuprox/icons"):
         try:
             new_dir = Path(upload_path)
             new_dir.mkdir(parents=True)
-            shutil.move(from_,upload_pth)
+            shutil.move(from_, upload_pth)
             logging.info("Success! creating a directory.")
             return "Direcroty Created Successfully."
         except OSError:
@@ -438,11 +447,11 @@ def move_to_api(filename):
 def save_picture(picture):
     pic_name = secrets.token_hex(8)
     # getting the name and the extension of the image
-    _,ext = os.path.splitext(picture.filename)
+    _, ext = os.path.splitext(picture.filename)
     final_name = pic_name + ext
-    picture_path = os.path.join(app.root_path,"icons", final_name)
+    picture_path = os.path.join(app.root_path, "icons", final_name)
     # resizing the file
-    size =(125,125)
+    size = (125, 125)
     i = Image.open(picture)
     i.thumbnail(size)
     # saving the thumbnail
@@ -460,8 +469,8 @@ def add_company():
     company = CompanyForm()
     if company.validate_on_submit():
         # getting if the company type exists within the service types
-        service_type  = Service.query.get(int(company.service.data))
-        if service_type :
+        service_type = Service.query.get(int(company.service.data))
+        if service_type:
 
             try:
                 data = Company(company.name.data, company.service.data)
@@ -471,17 +480,17 @@ def add_company():
                 print("NMNMNMNMN>>>>", company.icon.data)
 
                 if company.icon.data:
-                    #get company by name
+                    # get company by name
                     company_data = Company.query.filter_by(name=company.name.data).first()
                     filename = save_picture(company.icon.data)
-                    icon_data = ImageCompany(company_data.id,filename)
+                    icon_data = ImageCompany(company_data.id, filename)
                     db.session.add(icon_data)
                     db.session.commit()
                 else:
-                    flash("Error!Icon Was Not Uploaded.","error")
+                    flash("Error!Icon Was Not Uploaded.", "error")
                     redirect(url_for("add_company"))
             except sqlalchemy.exc.InvalidRequestError:
-                flash("Company By That Name Exists","warning")
+                flash("Company By That Name Exists", "warning")
             except sqlalchemy.exc.IntegrityError:
                 flash("Company By That Name Exists", "warning")
             # add company
@@ -490,9 +499,9 @@ def add_company():
             company.name.data = ""
             company.service.data = ""
             flash(f"Company Successfully Added", "success")
-        else :
-            flash("Service type Provided does not exist. Please add it first.","error")
-    return render_template("add_company.html", form=company ,companies = service_data)
+        else:
+            flash("Service type Provided does not exist. Please add it first.", "error")
+    return render_template("add_company.html", form=company, companies=service_data)
 
 
 @app.route("/branches/company/view")
@@ -502,7 +511,7 @@ def view_company():
     company_data = Company.query.all()
     # init the form
     branch = BranchForm()
-    return render_template("view_company.html", form=branch, data =company_data)
+    return render_template("view_company.html", form=branch, data=company_data)
 
 
 @app.route("/branches/category/view")
@@ -515,10 +524,10 @@ def view_category():
     return render_template("view_category.html", form=branch, data=service_data)
 
 
-@app.route("/help",methods=["GET","POST"])
+@app.route("/help", methods=["GET", "POST"])
 def help():
     solution_data = Help.query.all()
-    return render_template("help.html",data = solution_data)
+    return render_template("help.html", data=solution_data)
 
 
 @app.route("/extras")
@@ -526,24 +535,25 @@ def help():
 def extras():
     return render_template("extras.html")
 
+
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for("login"))
 
 
-@app.route("/login",methods=["POST","GET"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("home"))
 
-    #loading the form
+    # loading the form
     login = LoginForm()
-    #checking the form data status
+    # checking the form data status
     if login.validate_on_submit():
-        print("form_data",login.email.data,login.password.data)
+        print("form_data", login.email.data, login.password.data)
         user = User.query.filter_by(email=login.email.data).first()
-        print("user_data",user)
+        print("user_data", user)
         if user and bcrypt.check_password_hash(user.password, login.password.data):
             next_page = request.args.get("next")
             login_user(user)
@@ -570,72 +580,70 @@ def register():
             db.session.add(user)
             db.session.commit()
         except sqlalchemy.exc.IntegrityError:
-            flash("User By That Username Exists","warning")
+            flash("User By That Username Exists", "warning")
         flash(f"Account Created successfully", "success")
         return redirect(url_for('login'))
     return render_template("register.html", form=register)
 
 
 # new ]
-@app.route("/download/book/mac",methods=["GET"])
+@app.route("/download/book/mac", methods=["GET"])
 def book_mac():
-    return send_from_directory("uploads/apps","book_mac.zip",as_attachment=True)
+    return send_from_directory("uploads/apps", "book_mac.zip", as_attachment=True)
 
-@app.route("/download/book/windows",methods=["GET"])
+
+@app.route("/download/book/windows", methods=["GET"])
 def book_win():
-    return send_from_directory("uploads/apps","book_windows.zip",
+    return send_from_directory("uploads/apps", "book_windows.zip",
                                as_attachment=True)
 
 
-@app.route("/download/book/linux",methods=["GET"])
+@app.route("/download/book/linux", methods=["GET"])
 def book_lin():
-    return send_from_directory("uploads/apps","book_linux.zip",as_attachment=True)
+    return send_from_directory("uploads/apps", "book_linux.zip", as_attachment=True)
 
 
-@app.route("/download/teller/mac",methods=["GET"])
+@app.route("/download/teller/mac", methods=["GET"])
 def teller_mac():
-    return send_from_directory("uploads/apps","teller_mac.zip",as_attachment=True)
+    return send_from_directory("uploads/apps", "teller_mac.zip", as_attachment=True)
 
-@app.route("/download/teller/windows",methods=["GET"])
+
+@app.route("/download/teller/windows", methods=["GET"])
 def teller_win():
-    return send_from_directory("uploads/apps","teller_windows.zip",
+    return send_from_directory("uploads/apps", "teller_windows.zip",
                                as_attachment=True)
 
 
-@app.route("/download/teller/linux",methods=["GET"])
+@app.route("/download/teller/linux", methods=["GET"])
 def teller_lin():
-    return send_from_directory("uploads/apps","teller_linux.zip",
+    return send_from_directory("uploads/apps", "teller_linux.zip",
                                as_attachment=True)
 
 
-@app.route("/download/display/mac",methods=["GET"])
+@app.route("/download/display/mac", methods=["GET"])
 def display_mac():
-    return send_from_directory("uploads/apps","display_mac.zip",as_attachment=True)
+    return send_from_directory("uploads/apps", "display_mac.zip", as_attachment=True)
 
-@app.route("/download/display/windows",methods=["GET"])
+
+@app.route("/download/display/windows", methods=["GET"])
 def display_win():
-    return send_from_directory("uploads/apps","display_windows.zip",as_attachment=True)
+    return send_from_directory("uploads/apps", "display_windows.zip", as_attachment=True)
 
 
-@app.route("/download/display/linux",methods=["GET"])
+@app.route("/download/display/linux", methods=["GET"])
 def display_linux():
-    return send_from_directory("uploads/apps","display_linux.zip",as_attachment=True)
+    return send_from_directory("uploads/apps", "display_linux.zip", as_attachment=True)
 
 
-
-
-
-
-@app.route("/download/app",methods=["GET"])
+@app.route("/download/app", methods=["GET"])
 def mobile_app():
-    return send_from_directory("uploads/apps","fuprox.apk",as_attachment=True)
-
-
-
+    return send_from_directory("uploads/apps", "fuprox.apk", as_attachment=True)
 
 
 ''' working with users'''
-@app.route("/extras/users/add",methods=["GET","POST"])
+
+
+@app.route("/extras/users/add", methods=["GET", "POST"])
 @login_required
 def add_users():
     # getting user data from the database
@@ -651,9 +659,9 @@ def add_users():
             db.session.add(user)
             db.session.commit()
         except sqlalchemy.exc.IntegrityError:
-            flash("User By That Name Exists","warning")
+            flash("User By That Name Exists", "warning")
         flash(f"Account Created successfully", "success")
-    return render_template("add_users.html", form=register,data=user_data)
+    return render_template("add_users.html", form=register, data=user_data)
 
 
 @app.route("/extras/users/view")
@@ -669,38 +677,35 @@ def manage_users():
 
 
 # SEARCHING ROUTE
-@app.route("/help/solution/<int:id>",methods=["GET","POST"])
+@app.route("/help/solution/<int:id>", methods=["GET", "POST"])
 def search(id):
     # get data from the database based on the data provided
     data = Help.query.get(id)
     # there should be a solution database || FAQ
-    return render_template("search.html",data=data)
+    return render_template("search.html", data=data)
 
 
-@app.route("/help/solution/add",methods=["GET","POST"])
+@app.route("/help/solution/add", methods=["GET", "POST"])
 @login_required
 def add_solution():
     solution_form = SolutionForm()
     if solution_form.validate_on_submit():
-
         topic = solution_form.topic.data
         title = solution_form.title.data
         sol = solution_form.solution.data
 
-        solution_data = Help(topic,title,sol)
+        solution_data = Help(topic, title, sol)
         db.session.add(solution_data)
         db.session.commit()
 
-        flash("Solution Added Successfully","success")
+        flash("Solution Added Successfully", "success")
 
         # render a html && add the data to the page
-    return render_template("add_solution.html",form=solution_form)
-
-
+    return render_template("add_solution.html", form=solution_form)
 
 
 # the edit routes
-@app.route("/branch/edit/<int:id>",methods=["GET","POST"])
+@app.route("/branch/edit/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_branch(id):
     company_data = Company.query.all()
@@ -725,7 +730,7 @@ def edit_branch(id):
             # update date to the database
             db.session.commit()
         except sqlalchemy.exc.IntegrityError:
-            flash("Branch By That Name Exists","warning")
+            flash("Branch By That Name Exists", "warning")
 
         # here we are going to push  the branch data to the lacalhost
         sio.emit("branch_edit", branch_schema.dump(branch_data))
@@ -753,25 +758,25 @@ def edit_branch(id):
 
     else:
         flash("Company Does Not exist. Add company name first.", "danger")
-            
+
     return render_template("edit_branch.html", form=branch, companies=company_data, services=service_data)
 
 
-@app.route("/branch/delete/<int:id>",methods=["GET","POST"])
+@app.route("/branch/delete/<int:id>", methods=["GET", "POST"])
 @login_required
 def delete_branch(id):
     # get the branch data
     branch_data = Branch.query.get(id)
     db.session.delete(branch_data)
     db.session.commit()
-    flash("Branch Deleted Sucessfully","success")
+    flash("Branch Deleted Sucessfully", "success")
     # init the form
     branch = BranchForm()
     return render_template("delete_branch.html", form=branch, data=branch_data)
 
 
 # edit company
-@app.route("/company/edit/<int:id>",methods=["GET","POST"])
+@app.route("/company/edit/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_company(id):
     this_company = Company.query.get(id)
@@ -780,42 +785,46 @@ def edit_company(id):
     # # init the form
     company = CompanyForm()
     if company.validate_on_submit():
-        # update data in the database 
+        # update data in the database
         this_company.name = company.name.data
         this_company.service = company.service.data
-        
-        # update date to the database
-        db.session.commit()
+        try :
+            # update date to the database
+            db.session.commit()
+        except sqlalchemy.exc.IntegrityError:
+            return redirect(url_for("edit_company",id=id))
+            flash("Cannot Edit the Company Name","error")
 
         # prefilling the form with the empty fields
         company.name.data = ""
         company.service.data = ""
-    
+
         flash("Company Successfully Updated", "success")
 
         return redirect(url_for("view_company"))
+
     elif request.method == "GET":
         company.name.data = this_company.name
         company.service.data = this_company.service
-        
+
 
     else:
         flash("Company Does Not exist. Add company name first.", "danger")
-            
+
     return render_template("edit_company.html", form=company, services=services)
 
 
-
-@app.route("/email",methods=["POST"])
+@app.route("/email", methods=["POST"])
 def send_email():
     to = request.json["email"]
     subject = request.json["subject"]
     body = request.json["body"]
-    print("to",to)
-    return email(to,subject,body)
+    print("to", to)
+    return email(to, subject, body)
+
 
 # edit company
-@app.route("/category/edit/<int:id>",methods=["GET","POST"])
+@app.route("/category/edit/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_category(id):
     this_category = Service.query.get(id)
@@ -826,14 +835,14 @@ def edit_category(id):
         # update data in the database 
         this_category.name = service.name.data
         this_category.service = service.service.data
-        
+
         # update date to the database
         db.session.commit()
 
         # prefilling the form with the empty fields
         service.name.data = ""
         service.service.data = ""
-    
+
         flash("Company Successfully Updated", "success")
         return redirect(url_for("view_category"))
 
@@ -844,6 +853,7 @@ def edit_category(id):
         flash("Company Does Not exist. Add company name first.", "danger")
     return render_template("edit_category.html", form=service)
 
+
 '''working with sockets '''
 try:
     sio.connect(socket_link)
@@ -851,6 +861,4 @@ except socketio.exceptions.ConnectionError:
     print("Error! Could not connect to the socket server.")
     # print("...")
 
-
 # TODO : app Issues
-
