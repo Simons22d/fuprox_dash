@@ -287,7 +287,7 @@ def branches():
                                                  <pre>{key_}</pre>
                                                  <br>
                                                  If your are not sure of how to use the key on the applications. <br><br>
-                                                 Please Follow <a href='http://68.183.89.127:3000/help'>this</a>
+                                                 Please Follow <a href='http://159.65.144.235:3000/help'>this</a>
                                                  link to get more infomation and other documents.<br><br>
 
                                                  Kind Regards,<br>
