@@ -20,11 +20,7 @@ db_user = os.getenv("BD_USER")
 app = Flask(__name__)
 app.config["SECRET_KEY"] = 'ae98b899c219ea14930e01ecaafd451090f4276f6e3c20481d92d240acb35d47'
 # basedir  = os.path.abspath(os.path.dirname(__file__))
-<<<<<<< HEAD
 app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+mysqlconnector://{db_user}:{db_pass}@localhost:3306/fuprox"
-=======
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+mysqlconnector://root:@localhost:3306/fuprox"
->>>>>>> 6c168eaa45962ad629474ddb6242a4ec1698b081
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 try:
