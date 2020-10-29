@@ -128,7 +128,6 @@ class Mpesa(db.Model):
     merchant_request_id = db.Column(db.String(255), nullable=True)
     result_code = db.Column(db.Integer, nullable=False)
     result_desc = db.Column(db.Text, nullable=True)
-    date_added = db.Column(db.DateTime(), default=datetime.now)
     local_transactional_key = db.Column(db.String(255), nullable=False)
 
     def __init__(self, MerchantRequestID, CheckoutRequestID, ResultCode, ResultDesc):

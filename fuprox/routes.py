@@ -526,6 +526,7 @@ def help():
 def extras():
     return render_template("extras.html")
 
+
 @app.route("/logout")
 def logout():
     logout_user()
@@ -749,7 +750,7 @@ def edit_branch(id):
         branch.opens.data = branch_data.opens
         branch.closes.data = branch_data.closes
         branch.company.data = branch_data.company
-        branch.description.data = branch_data.description
+        branch.email.data = branch_data.description
 
     else:
         flash("Company Does Not exist. Add company name first.", "danger")
@@ -760,13 +761,15 @@ def edit_branch(id):
 @app.route("/branch/delete/<int:id>",methods=["GET","POST"])
 @login_required
 def delete_branch(id):
-    # get the branch data
     branch_data = Branch.query.get(id)
-    db.session.delete(branch_data)
-    db.session.commit()
-    flash("Branch Deleted Sucessfully","success")
-    # init the form
-    branch = BranchForm()
+    # get the branch data
+    if request.method == "POST":
+        db.session.delete(branch_data)
+        db.session.commit()
+        flash("Branch Deleted Sucessfully","success")
+    elif request.method == "GET" :
+        # init the form
+        branch = BranchForm()
     return render_template("delete_branch.html", form=branch, data=branch_data)
 
 
@@ -783,9 +786,13 @@ def edit_company(id):
         # update data in the database 
         this_company.name = company.name.data
         this_company.service = company.service.data
-        
-        # update date to the database
-        db.session.commit()
+        try:
+            # update date to the database
+            db.session.commit()
+        except sqlalchemy.exc.IntegrityError:
+            flash("Error! Company By That Name Exists", "warning")
+            return redirect(url_for("edit_company",id=id))
+
 
         # prefilling the form with the empty fields
         company.name.data = ""
