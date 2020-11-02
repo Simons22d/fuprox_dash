@@ -766,7 +766,6 @@ def edit_branch(id):
 @login_required
 def delete_branch(id):
     branch_data = Branch.query.get(id)
-<<<<<<< HEAD
     # get the branch data
     if request.method == "POST":
         db.session.delete(branch_data)
@@ -775,13 +774,11 @@ def delete_branch(id):
     elif request.method == "GET" :
         # init the form
         branch = BranchForm()
-=======
     db.session.delete(branch_data)
     db.session.commit()
     flash("Branch Deleted Sucessfully", "success")
     # init the form
     branch = BranchForm()
->>>>>>> 6c168eaa45962ad629474ddb6242a4ec1698b081
     return render_template("delete_branch.html", form=branch, data=branch_data)
 
 
@@ -798,23 +795,18 @@ def edit_company(id):
         # update data in the database
         this_company.name = company.name.data
         this_company.service = company.service.data
-<<<<<<< HEAD
         try:
             # update date to the database
             db.session.commit()
         except sqlalchemy.exc.IntegrityError:
             flash("Error! Company By That Name Exists", "warning")
             return redirect(url_for("edit_company",id=id))
-
-=======
         try :
             # update date to the database
             db.session.commit()
         except sqlalchemy.exc.IntegrityError:
             return redirect(url_for("edit_company",id=id))
             flash("Cannot Edit the Company Name","error")
->>>>>>> 6c168eaa45962ad629474ddb6242a4ec1698b081
-
         # prefilling the form with the empty fields
         company.name.data = ""
         company.service.data = ""
