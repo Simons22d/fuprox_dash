@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from flask_login import UserMixin
 
 from fuprox import db, ma, login_manager

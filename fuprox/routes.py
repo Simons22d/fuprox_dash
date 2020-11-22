@@ -15,6 +15,7 @@ import secrets
 import socketio
 from fuprox.utility import email
 from flask_sqlalchemy import sqlalchemy
+import os
 
 sio = socketio.Client()
 socket_link = "http://127.0.0.1:5000/"
@@ -341,7 +342,7 @@ def branches():
                     #     pass
                     # except socket.gaierror:
                     #     pass
-                    email((branch.email.data).strip(), "Branch Key from Fuprox", body)
+                    # email((branch.email.data).strip(), "Branch Key from Fuprox", body)
                     # pass
                 except UnicodeEncodeError:
                     # warn about sending a email and offer a link to sending the email
@@ -420,7 +421,7 @@ def add_category():
     return render_template("add_category.html", form=company)
 
 
-import os
+
 
 
 def move_to_api(filename):
@@ -864,6 +865,18 @@ def edit_category(id):
     else:
         flash("Company Does Not exist. Add company name first.", "danger")
     return render_template("edit_category.html", form=service)
+
+
+
+@sio.event
+def connect():
+    print('connection established')
+
+
+@sio.event
+def disconnect():
+    print('disconnected from server')
+
 
 
 '''working with sockets '''
