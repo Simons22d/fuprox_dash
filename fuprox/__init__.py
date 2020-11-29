@@ -8,10 +8,7 @@ from decouple import config
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
-
-
 
 db_pass = os.getenv('DBPASS')
 db_user = os.getenv("DBUSER")
