@@ -1,7 +1,11 @@
 from datetime import datetime
 from flask_login import UserMixin
-
+import secrets
 from fuprox import db, ma, login_manager
+
+
+def ticket_unique() -> int:
+    return secrets.token_hex(16)
 
 
 @login_manager.user_loader
@@ -52,6 +56,8 @@ class CompanySchema(ma.Schema):
 
 
 # creating a branch class
+
+# creating a branch class
 class Branch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(length=250), unique=True)
@@ -64,6 +70,8 @@ class Branch(db.Model):
     description = db.Column(db.String(length=50))
     key_ = db.Column(db.Text)
     valid_till = db.Column(db.DateTime)
+    is_synced = db.Column(db.Boolean, default=False)
+    unique_id = db.Column(db.String(255), default=ticket_unique, unique=True)
 
     def __init__(self, name, company, longitude, latitude, opens, closes, service, description, key_):
         self.name = name
@@ -82,7 +90,7 @@ class BranchSchema(ma.Schema):
     class Meta:
         fields = (
             'id', 'name', 'company', 'address', 'longitude', 'latitude', 'opens', 'closes', 'service', 'description',
-            "key_", "valid_till")
+            "key_", "valid_till","unique_id")
 
 
 # creating a user class
@@ -178,7 +186,9 @@ class Booking(db.Model):
 
 class BookingSchema(ma.Schema):
     class Meta:
-        fields = ("id", "service_name", "start", "branch_id", "ticket", "active", "next", "serviced", "teller", "kind", "user", "is_instant", "forwarded", "")
+        fields = (
+        "id", "service_name", "start", "branch_id", "ticket", "active", "next", "serviced", "teller", "kind", "user",
+        "is_instant", "forwarded", "")
 
 
 class ImageCompany(db.Model):
