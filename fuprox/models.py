@@ -90,7 +90,7 @@ class BranchSchema(ma.Schema):
     class Meta:
         fields = (
             'id', 'name', 'company', 'address', 'longitude', 'latitude', 'opens', 'closes', 'service', 'description',
-            "key_", "valid_till","unique_id")
+            "key_", "valid_till", "unique_id")
 
 
 # creating a user class
@@ -191,7 +191,6 @@ class BookingSchema(ma.Schema):
     class Meta:
         fields = ("id", "service_name", "start", "branch_id", "ticket", "active", "nxt", "serviced", "teller", \
                   "kind", "user", "is_instant", "forwarded", "is_synced", "unique_id", "unique_teller")
-
 
 
 class ImageCompany(db.Model):
