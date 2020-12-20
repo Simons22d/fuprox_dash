@@ -71,9 +71,9 @@ class Branch(db.Model):
     key_ = db.Column(db.Text)
     valid_till = db.Column(db.DateTime)
     is_synced = db.Column(db.Boolean, default=False)
-    unique_id = db.Column(db.String(255), default=ticket_unique, unique=True)
+    unique_id = db.Column(db.String(255), nullable=False, unique=True)
 
-    def __init__(self, name, company, longitude, latitude, opens, closes, service, description, key_):
+    def __init__(self, name, company, longitude, latitude, opens, closes, service, description, key_, unique_id):
         self.name = name
         self.company = company
         self.longitude = longitude
@@ -83,6 +83,7 @@ class Branch(db.Model):
         self.service = service
         self.description = description
         self.key_ = key_
+        self.unique_id = unique_id
 
 
 # creating branch Schema
@@ -90,7 +91,7 @@ class BranchSchema(ma.Schema):
     class Meta:
         fields = (
             'id', 'name', 'company', 'address', 'longitude', 'latitude', 'opens', 'closes', 'service', 'description',
-            "key_", "valid_till", "unique_id")
+            "key_", "valid_till", "is_synced", "unique_id")
 
 
 # creating a user class
@@ -161,14 +162,14 @@ class Booking(db.Model):
     active = db.Column(db.Boolean, default=False, nullable=False)
     nxt = db.Column(db.Integer, nullable=False, default=1001)
     serviced = db.Column(db.Boolean, nullable=False, default=False)
-    teller = db.Column(db.String(250), db.ForeignKey("teller.unique_id"), nullable=False)
+    teller = db.Column(db.String(250), default=0,nullable=False)
     kind = db.Column(db.Integer, nullable=False)
     user = db.Column(db.Integer, default=0, nullable=False)
     is_instant = db.Column(db.Boolean, default=False)
     forwarded = db.Column(db.Boolean, default=False)
     is_synced = db.Column(db.Boolean, default=False)
     unique_id = db.Column(db.String(255), default=ticket_unique, unique=True)
-    unique_teller = db.Column(db.String(255), default=000, unique=True)
+    unique_teller = db.Column(db.String(255), default=000)
 
     def __init__(self, service_name, start, branch_id, ticket, active, nxt, serviced, teller, kind, user, instant,
                  fowarded):

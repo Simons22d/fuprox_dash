@@ -219,9 +219,9 @@ def branches():
         this_company_data = Company.query.filter_by(name=branch.company.data).first()
         if this_company_data:
             key_ = secrets.token_hex();
+            unique_id = ticket_unique()
             data = Branch(branch.name.data, branch.company.data, branch.longitude.data, branch.latitude.data,
-                          branch.opens.data,
-                          branch.closes.data, branch.service.data, branch.email.data, key_)
+                          branch.opens.data,branch.closes.data, branch.service.data, branch.email.data, key_,unique_id)
             if not branch_exits(branch.name.data):
                 data_ = branch_schema.dump(data)
                 # here we are going to push  the branch data to the lacalhost
@@ -365,7 +365,9 @@ def branches():
 
 
 """ not recommemded __check if current branhc is in db"""
-
+def log(msg):
+    print(f"{datetime.now().strftime('%d:%m:%Y %H:%M:%S')} — {msg}")
+    return True
 
 def branch_exits(name):
     lookup = Branch.query.filter_by(name=name).first()
@@ -443,6 +445,10 @@ def move_to_api(filename):
             return "Error! creating a directory."
     else:
         shutil.move(from_, upload_path)
+
+
+def ticket_unique() -> int:
+    return secrets.token_hex(16)
 
 
 def save_picture(picture):
