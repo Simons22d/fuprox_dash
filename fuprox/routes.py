@@ -342,7 +342,7 @@ def branches():
                     #     pass
                     # except socket.gaierror:
                     #     pass
-                    # email((branch.email.data).strip(), "Branch Key from Fuprox", body)
+                    email((branch.email.data).strip(), "Branch Key from Fuprox", body)
                     pass
                 except UnicodeEncodeError:
                     # warn about sending a email and offer a link to sending the email
