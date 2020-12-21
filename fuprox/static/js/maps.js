@@ -16,9 +16,10 @@ const fowardSearch = (term) => {
         beforeSend : ()=>{
         },
         success : (data) =>{
+            console.log(">>>",data)
             // add data to the datalist
             data.map((index,item)=>{
-                datalist.append(`<option value='${index.display_name}'>${index.osm_type}</option>`);
+                datalist.html(`<option value='${index.display_name}'>${index.osm_type}</option>`);
             })
         },
         error : (error)=>{
@@ -32,7 +33,6 @@ searchHandle.addEventListener("input",(e)=>{
 })
 
 searchHandle.addEventListener("keyup",(e)=>{
-    console.log("THE KEY UP EVENT")
     $.ajax({
         url : `https://eu1.locationiq.com/v1/search.php?key=af236a4eb6f160&q=${e.target.value}&format=json`,
         method : "GET",
@@ -62,6 +62,8 @@ searchHandle.addEventListener("keyup",(e)=>{
         }
     })
 })
+
+
 
 
 function initMap() {

@@ -176,7 +176,6 @@ onSelect: function (fd, d, picker) {
 
 $('#generate').on("click",()=>{
     // generics
-
     let period = $("#frequency").val();
     let status = $("#type").val();
     let date
