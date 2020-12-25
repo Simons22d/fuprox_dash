@@ -67,7 +67,7 @@ searchHandle.addEventListener("keyup",(e)=>{
 
 
 function initMap() {
-    var myLatLng = { lat: latitude, lng: longitude };
+    var myLatLng = {lat: latitude, lng: longitude};
 
     map = new google.maps.Map(handle, {
         center: myLatLng,
@@ -78,11 +78,11 @@ function initMap() {
     // Update lat/long value of div when anywhere in the map is clicked    
     google.maps.event.addListener(map, 'click', function (event) {
         let lat = event.latLng.lat();
-        let long = event.latLng.lng();  
+        let long = event.latLng.lng();
         document.getElementById('latclicked').innerHTML = event.latLng.lat();
         document.getElementById('longclicked').innerHTML = event.latLng.lng();
         // get the coordinate of the location on map and save it to the database
-        geoCodeRequest(event.latLng.lat(),event.latLng.lng());
+        geoCodeRequest(event.latLng.lat(), event.latLng.lng());
     });
 
 
@@ -99,9 +99,9 @@ function initMap() {
     // Update lat/long value of div when the marker is clicked
     marker.addListener('click', function (event) {
         let lat = event.latLng.lat();
-        let long = event.latLng.lng();  
-        // document.getElementById('latclicked').innerHTML = lat;
-        // document.getElementById('longclicked').innerHTML = long;
+        let long = event.latLng.lng();
+        document.getElementById('latclicked').innerHTML = lat;
+        document.getElementById('longclicked').innerHTML = long;
     });
 
     // Create new marker on double click event on the map
@@ -113,21 +113,21 @@ function initMap() {
         });
 
         // Update lat/long value of div when the marker is clicked
-        // marker.addListener('click', function () {
-            // document.getElementById('latclicked').innerHTML = event.latLng.lat();
-            // document.getElementById('longclicked').innerHTML = event.latLng.lng();
+        marker.addListener('click', function () {
+            document.getElementById('latclicked').innerHTML = event.latLng.lat();
+            document.getElementById('longclicked').innerHTML = event.latLng.lng();
         });
 
-    // Create new marker on single click event on the map
-    // google.maps.event.addListener(map,'click',function(event) {
-    //     var marker = new google.maps.Marker({
-    //       position: event.latLng,
-    //       map: map,
-    //       title: event.latLng.lat()+', '+event.latLng.lng()
-    //     });
-    // });
+        // Create new marker on single click event on the map
+        google.maps.event.addListener(map, 'click', function (event) {
+            var marker = new google.maps.Marker({
+                position: event.latLng,
+                map: map,
+                title: event.latLng.lat() + ', ' + event.latLng.lng()
+            });
+        });
+    })
 }
-
 
 const geoCodeRequest = (lat,long) =>{
     let key = "af236a4eb6f160";
