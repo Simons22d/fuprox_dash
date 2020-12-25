@@ -79,8 +79,8 @@ function initMap() {
     google.maps.event.addListener(map, 'click', function (event) {
         let lat = event.latLng.lat();
         let long = event.latLng.lng();
-        document.getElementById('latclicked').innerHTML = event.latLng.lat();
-        document.getElementById('longclicked').innerHTML = event.latLng.lng();
+        // document.getElementById('latclicked').innerHTML = event.latLng.lat();
+        // document.getElementById('longclicked').innerHTML = event.latLng.lng();
         // get the coordinate of the location on map and save it to the database
         geoCodeRequest(event.latLng.lat(), event.latLng.lng());
     });
@@ -100,8 +100,8 @@ function initMap() {
     marker.addListener('click', function (event) {
         let lat = event.latLng.lat();
         let long = event.latLng.lng();
-        document.getElementById('latclicked').innerHTML = lat;
-        document.getElementById('longclicked').innerHTML = long;
+        // document.getElementById('latclicked').innerHTML = lat;
+        // document.getElementById('longclicked').innerHTML = long;
     });
 
     // Create new marker on double click event on the map
@@ -112,20 +112,22 @@ function initMap() {
             title: event.latLng.lat() + ', ' + event.latLng.lng()
         });
 
-        // Update lat/long value of div when the marker is clicked
-        marker.addListener('click', function () {
-            document.getElementById('latclicked').innerHTML = event.latLng.lat();
-            document.getElementById('longclicked').innerHTML = event.latLng.lng();
-        });
+        // // Update lat/long value of div when the marker is clicked
+        // marker.addListener('click', function () {
+        //     console.log("LAT",event.latLng.lat)
+        //     consol.elog("LONG",event.latLng.lng())
+        //     // document.getElementById('latclicked').innerHTML = event.latLng.lat();
+        //     // document.getElementById('longclicked').innerHTML = event.latLng.lng();
+        // });
 
         // Create new marker on single click event on the map
-        google.maps.event.addListener(map, 'click', function (event) {
-            var marker = new google.maps.Marker({
-                position: event.latLng,
-                map: map,
-                title: event.latLng.lat() + ', ' + event.latLng.lng()
-            });
-        });
+        // google.maps.event.addListener(map, 'click', function (event) {
+        //     var marker = new google.maps.Marker({
+        //         position: event.latLng,
+        //         map: map,
+        //         title: event.latLng.lat() + ', ' + event.latLng.lng()
+        //     });
+        // });
     })
 }
 
