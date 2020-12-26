@@ -229,6 +229,7 @@ def branches():
                 # we are going to email the sender
                 db.session.add(data)
                 db.session.commit()
+                db.session.close()
                 # we are going to email.
                 body = f"""
                                  <div marginheight="0" marginwidth="0" style="background:#fafafa;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;min-width:100%;padding:0;text-align:left;width:100%!important" bgcolor="#fafafa">
@@ -343,7 +344,7 @@ def branches():
                     # except socket.gaierror:
                     #     pass
                     email((branch.email.data).strip(), "Branch Key from Fuprox", body)
-                    pass
+                    
                 except UnicodeEncodeError:
                     # warn about sending a email and offer a link to sending the email
                     print("Error! error Sending email")
@@ -411,6 +412,7 @@ def add_category():
             data = Service(company.name.data, company.service.data, final)
             db.session.add(data)
             db.session.commit()
+            db.session.close()
         except sqlalchemy.exc.IntegrityError:
             flash(f"Category By That Name Exists", "warning")
         # adding a category
@@ -483,6 +485,7 @@ def add_company():
                 data = Company(company.name.data, company.service.data)
                 db.session.add(data)
                 db.session.commit()
+                db.session.close()
 
                 print("NMNMNMNMN>>>>", company.icon.data)
 
@@ -493,6 +496,8 @@ def add_company():
                     icon_data = ImageCompany(company_data.id, filename)
                     db.session.add(icon_data)
                     db.session.commit()
+                    db.session.close()
+
                 else:
                     flash("Error!Icon Was Not Uploaded.", "error")
                     redirect(url_for("add_company"))
@@ -586,6 +591,7 @@ def register():
             user = User(username=register.username.data, email=register.email.data, password=hashed_password)
             db.session.add(user)
             db.session.commit()
+            db.session.close()
         except sqlalchemy.exc.IntegrityError:
             flash("User By That Username Exists", "warning")
         flash(f"Account Created successfully", "success")
@@ -665,6 +671,7 @@ def add_users():
             user = User(username=register.username.data, email=register.email.data, password=hashed_password)
             db.session.add(user)
             db.session.commit()
+            db.session.close()
         except sqlalchemy.exc.IntegrityError:
             flash("User By That Name Exists", "warning")
         flash(f"Account Created successfully", "success")
@@ -704,7 +711,7 @@ def add_solution():
         solution_data = Help(topic, title, sol)
         db.session.add(solution_data)
         db.session.commit()
-
+        db.session.close()
         flash("Solution Added Successfully", "success")
 
         # render a html && add the data to the page
@@ -736,6 +743,7 @@ def edit_branch(id):
 
             # update date to the database
             db.session.commit()
+            db.session.close()
         except sqlalchemy.exc.IntegrityError:
             flash("Branch By That Name Exists", "warning")
 
@@ -777,12 +785,14 @@ def delete_branch(id):
     if request.method == "POST":
         db.session.delete(branch_data)
         db.session.commit()
+        db.session.close()
         flash("Branch Deleted Sucessfully","success")
     elif request.method == "GET" :
         # init the form
         branch = BranchForm()
     db.session.delete(branch_data)
     db.session.commit()
+    db.session.close()
     flash("Branch Deleted Sucessfully", "success")
     # init the form
     branch = BranchForm()
@@ -805,12 +815,14 @@ def edit_company(id):
         try:
             # update date to the database
             db.session.commit()
+            db.session.close()
         except sqlalchemy.exc.IntegrityError:
             flash("Error! Company By That Name Exists", "warning")
             return redirect(url_for("edit_company",id=id))
         try :
             # update date to the database
             db.session.commit()
+            db.session.close()
         except sqlalchemy.exc.IntegrityError:
             return redirect(url_for("edit_company",id=id))
             flash("Cannot Edit the Company Name","error")
@@ -857,7 +869,7 @@ def edit_category(id):
 
         # update date to the database
         db.session.commit()
-
+        db.session.close()
         # prefilling the form with the empty fields
         service.name.data = ""
         service.service.data = ""
