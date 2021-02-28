@@ -216,14 +216,14 @@
               <div class="col-lg-6">
                 {{ form.opens.label(class='form-control-label') }}
                 {% if form.opens.errors %}
-                {{ form.opens(class="form-control form-control-sm is-invalid", id="branchOpens")}}
+                {{ form.opens(class="form-control form-control-sm is-invalid", id="branchOpens",autocomplete="off")}}
                 <div class="invalid-feedback">
                     {% for error in form.opens.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                    {{ form.opens(class="form-control form-control-sm ", id="branchOpens")}}
+                    {{ form.opens(class="form-control form-control-sm ", id="branchOpens",autocomplete="off")}}
                 {% endif %}
                 <small class="form-text text-muted"></small>
               </div>
@@ -231,14 +231,14 @@
               <div class="col-lg-6">
                 {{ form.closes.label(class='form-control-label') }}
                 {% if form.closes.errors %}
-                {{ form.closes(class="form-control form-control-sm is-invalid",id="branchCloses")}}
+                {{ form.closes(class="form-control form-control-sm is-invalid",id="branchCloses",autocomplete="off")}}
                 <div class="invalid-feedback">
                     {% for error in form.closes.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                    {{ form.closes(class="form-control form-control-sm ",id="branchCloses")}}
+                    {{ form.closes(class="form-control form-control-sm ",id="branchCloses",autocomplete="off")}}
                 {% endif %}
                 <small class="form-text text-muted"></small>
               </div>

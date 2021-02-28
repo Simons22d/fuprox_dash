@@ -16,9 +16,11 @@ import socketio
 from fuprox.utility import email
 from flask_sqlalchemy import sqlalchemy
 import os
+import logging
+
+socket_link = "http://localhost:5000/"
 
 sio = socketio.Client()
-socket_link = "http://127.0.0.1:5000/"
 
 # rendering many route to the same template
 branch_schema = BranchSchema()
@@ -192,8 +194,8 @@ def payments_card():
     # get date from the database 
     lookup = Mpesa.query.all()
     data = mpesas_schema.dump(lookup)
-    print("><>>>>>XX>>XXXXX")
-    print("mpesa", data)
+    # print("><>>>>>XX>>XXXXX")
+    # print("mpesa", data)
     # work on the payments templates
     return render_template("payment_card.html", transactions=data)
 
@@ -205,8 +207,8 @@ def payments_report():
     return render_template("payments_reports.html")
 
 
-@app.route("/branches")
-@app.route("/branches/add", methods=["POST", "GET"])
+@app.route("/branch")
+@app.route("/branch/add", methods=["POST", "GET"])
 @login_required
 def branches():
     # get data from the database
@@ -229,7 +231,6 @@ def branches():
                 # we are going to email the sender
                 db.session.add(data)
                 db.session.commit()
-                db.session.close()
                 # we are going to email.
                 body = f"""
                                  <div marginheight="0" marginwidth="0" style="background:#fafafa;color:#222222;font-family:'Helvetica','Arial',sans-serif;font-size:14px;font-weight:normal;line-height:19px;margin:0;min-width:100%;padding:0;text-align:left;width:100%!important" bgcolor="#fafafa">
@@ -412,13 +413,13 @@ def add_category():
             data = Service(company.name.data, company.service.data, final)
             db.session.add(data)
             db.session.commit()
-            db.session.close()
         except sqlalchemy.exc.IntegrityError:
             flash(f"Category By That Name Exists", "warning")
         # adding a category
         sio.emit("category", service_schema.dump(data))
         company.name.data = ""
         company.service.data = ""
+        db.session.close()
         flash(f"Service Successfully Added", "success")
     else:
         flash("Error! Make Sure all data is correct","error")
@@ -485,7 +486,6 @@ def add_company():
                 data = Company(company.name.data, company.service.data)
                 db.session.add(data)
                 db.session.commit()
-                db.session.close()
 
                 print("NMNMNMNMN>>>>", company.icon.data)
 
@@ -496,15 +496,18 @@ def add_company():
                     icon_data = ImageCompany(company_data.id, filename)
                     db.session.add(icon_data)
                     db.session.commit()
-                    db.session.close()
 
                 else:
                     flash("Error!Icon Was Not Uploaded.", "error")
                     redirect(url_for("add_company"))
             except sqlalchemy.exc.InvalidRequestError:
                 flash("Company By That Name Exists", "warning")
+                # db.session.close()
+
             except sqlalchemy.exc.IntegrityError:
                 flash("Company By That Name Exists", "warning")
+                # db.session.close()
+
             # add company
             sio.emit("company", company_schema.dump(data))
 
@@ -571,7 +574,7 @@ def login():
             login_user(user)
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash("Login unsuccessful Please Check Email and Password", "danger ")
+            flash("Login unsuccessful Please Check Email and Password", "danger")
     return render_template("login.html", form=login)
 
 

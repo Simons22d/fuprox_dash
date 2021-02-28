@@ -288,4 +288,15 @@ updatePage()
 // 		myChart.update();
 // 	});
 
+	   setTimeout(()=>{
+        $('#branchOpens').clockpicker({
+			placement: 'top',
+			donetext : "Select Time"
+		});
+        $('#branchCloses').clockpicker({
+			placement: 'top',
+			donetext : "Select Time"
+		});
+    },2000)
+
 })(jQuery);
