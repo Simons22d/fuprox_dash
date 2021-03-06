@@ -103,7 +103,7 @@
                 {{ form.hidden_tag() }}
              {% for field in form.errors %}
              {% for error in form.errors[field] %}
-                 <div class="alert alert-error">
+                 <div class="alert alert-danger">
                      <strong>Error!</strong> {{error}}
                  </div>
              {% endfor %}

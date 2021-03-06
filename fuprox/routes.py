@@ -366,7 +366,7 @@ def branches():
     return render_template("add_branch.html", form=branch, companies=company_data, services=service_data)
 
 
-""" not recommemded __check if current branhc is in db"""
+""" not recommemded __check if current branch is in db"""
 def log(msg):
     print(f"{datetime.now().strftime('%d:%m:%Y %H:%M:%S')} — {msg}")
     return True
